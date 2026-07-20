@@ -1,0 +1,103 @@
+<%- include('../partials/header') %>
+<section class="section" style="padding: 2rem 0;">
+  <div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+      <div>
+        <h1 style="font-size: 1.5rem;">
+          <% if (selectedCategory) { %>
+            <% const cat = categories.find(c => c.slug === selectedCategory); %>
+            <%= cat ? cat.name : 'Products' %>
+          <% } else { %>All Cooling Products<% } %>
+        </h1>
+        <p style="color: var(--gray-500); font-size: 0.9rem;"><%= total %> product<%= total !== 1 ? 's' : '' %> found</p>
+      </div>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <% if (selectedCategory) { %><a href="/products" class="btn btn-sm btn-outline">Clear filters</a><% } %>
+        <select onchange="window.location.href=this.value" style="padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 4px;">
+          <option value="?sort=newest<%= selectedCategory ? '&category=' + selectedCategory : '' %>" <%= sort === 'newest' ? 'selected' : '' %>>Newest</option>
+          <option value="?sort=price_asc<%= selectedCategory ? '&category=' + selectedCategory : '' %>" <%= sort === 'price_asc' ? 'selected' : '' %>>Price: Low to High</option>
+          <option value="?sort=price_desc<%= selectedCategory ? '&category=' + selectedCategory : '' %>" <%= sort === 'price_desc' ? 'selected' : '' %>>Price: High to Low</option>
+          <option value="?sort=name<%= selectedCategory ? '&category=' + selectedCategory : '' %>" <%= sort === 'name' ? 'selected' : '' %>>Name</option>
+        </select>
+      </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 220px 1fr; gap: 2rem;">
+      <aside>
+        <div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem;">
+          <h3 style="font-size: 1rem; margin-bottom: 1rem;">Categories</h3>
+          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+            <a href="/products" style="text-decoration: none; color: var(--gray-600); font-size: 0.9rem; padding: 0.3rem 0; <%= !selectedCategory ? 'font-weight: 600; color: var(--primary);' : '' %>">All Products</a>
+            <% categories.forEach(c => { %>
+              <a href="/products?category=<%= c.slug %>" style="text-decoration: none; color: var(--gray-600); font-size: 0.9rem; padding: 0.3rem 0; <%= selectedCategory === c.slug ? 'font-weight: 600; color: var(--primary);' : '' %>"><%= c.name %></a>
+            <% }); %>
+          </div>
+
+          <h3 style="font-size: 1rem; margin: 1.5rem 0 0.5rem;">Energy Rating</h3>
+          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+            <% ['A+++', 'A++', 'A+', 'A', 'B'].forEach(r => { %>
+              <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 0.3rem;">
+                <input type="checkbox" onchange="applyFilter()" class="energy-filter" value="<%= r %>" <%= energyRating && energyRating.includes(r) ? 'checked' : '' %>> <%= r %>
+              </label>
+            <% }); %>
+          </div>
+        </div>
+      </aside>
+
+      <div>
+        <% if (products.length === 0) { %>
+          <div style="text-align: center; padding: 3rem; color: var(--gray-500);">
+            <p style="font-size: 3rem; margin-bottom: 1rem;">🌀</p>
+            <h3>No products found</h3>
+            <p>Try adjusting your filters or search terms.</p>
+          </div>
+        <% } else { %>
+          <div class="product-grid">
+            <% products.forEach(p => { %>
+              <div class="product-card" style="position: relative;">
+                <% if (p.compare_price && p.compare_price > p.price) { %><span class="badge">-<%= Math.round((1 - p.price/p.compare_price) * 100) %>%</span><% } %>
+                <a href="/products/<%= p.slug %>" class="image">
+                  <img src="<%= p.image || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%23e5e7eb%22 width=%22200%22 height=%22200%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2240%22>❄️</text></svg>' %>" alt="<%= p.name %>">
+                </a>
+                <div class="info">
+                  <div class="category"><%= p.category_name || 'Cooling' %></div>
+                  <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
+                  <div class="price">
+                    €<%= p.price.toFixed(2) %>
+                    <% if (p.compare_price && p.compare_price > p.price) { %><span class="compare-price">€<%= p.compare_price.toFixed(2) %></span><% } %>
+                  </div>
+                  <% if (p.energy_rating) { %><span class="energy-badge"><%= p.energy_rating %></span><% } %>
+                  <form action="/cart/add" method="POST">
+                    <input type="hidden" name="product_id" value="<%= p.id %>">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-primary btn-sm add-to-cart">Add to Cart</button>
+                  </form>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        <% } %>
+
+        <% if (totalPages > 1) { %>
+          <div class="pagination">
+            <% for (let i = 1; i <= totalPages; i++) { %>
+              <a href="?page=<%= i %><%= selectedCategory ? '&category=' + selectedCategory : '' %><%= sort !== 'newest' ? '&sort=' + sort : '' %>" class="<%= page === i ? 'active' : '' %>"><%= i %></a>
+            <% } %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+function applyFilter() {
+  const checks = document.querySelectorAll('.energy-filter:checked');
+  const ratings = Array.from(checks).map(c => c.value).join(',');
+  const params = new URLSearchParams(window.location.search);
+  if (ratings) params.set('energy', ratings);
+  else params.delete('energy');
+  window.location.href = '?' + params.toString();
+}
+</script>
+<%- include('../partials/footer') %>

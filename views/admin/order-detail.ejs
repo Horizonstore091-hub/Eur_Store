@@ -1,0 +1,82 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Order #<%= order.order_number %></h1>
+  <a href="/admin/orders" class="btn btn-outline">← Back to Orders</a>
+</div>
+<% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+  <div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem;">
+    <h3 style="margin-bottom: 1rem;">Order Details</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; font-size: 0.9rem;">
+      <span style="color: var(--gray-500);">Date</span><span><%= new Date(order.created_at).toLocaleString() %></span>
+      <span style="color: var(--gray-500);">Status</span><span><span class="badge badge-<%= order.status %>"><%= order.status %></span></span>
+      <span style="color: var(--gray-500);">Payment</span><span><span class="badge badge-<%= order.payment_status %>"><%= order.payment_status %></span></span>
+      <span style="color: var(--gray-500);">Method</span><span><%= order.payment_method %></span>
+    </div>
+  </div>
+  <div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem;">
+    <h3 style="margin-bottom: 1rem;">Customer</h3>
+    <div style="font-size: 0.9rem;">
+      <p><strong><%= order.first_name %> <%= order.last_name %></strong></p>
+      <p><%= order.email %></p>
+      <% if (order.phone) { %><p><%= order.phone %></p><% } %>
+      <p><%= order.address %>, <%= order.city %> <%= order.postal_code %>, <%= order.country %></p>
+    </div>
+  </div>
+</div>
+
+<div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem; margin-top: 1.5rem;">
+  <h3 style="margin-bottom: 1rem;">Items</h3>
+  <table class="admin-table">
+    <thead><tr><th>Product</th><th>SKU</th><th>Price</th><th>Qty</th><th>Total</th></tr></thead>
+    <tbody>
+      <% items.forEach(item => { %>
+        <tr>
+          <td><%= item.product_name %></td>
+          <td style="font-size: 0.85rem;"><%= item.product_sku || 'N/A' %></td>
+          <td>€<%= item.price.toFixed(2) %></td>
+          <td><%= item.quantity %></td>
+          <td><strong>€<%= item.total.toFixed(2) %></strong></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+  <div style="text-align: right; margin-top: 1rem;">
+    <div>Subtotal: €<%= order.subtotal.toFixed(2) %></div>
+    <div>Shipping: €<%= order.shipping_cost.toFixed(2) %></div>
+    <div>Tax: €<%= order.tax.toFixed(2) %></div>
+    <div style="font-size: 1.2rem; font-weight: 700; border-top: 1px solid var(--gray-200); padding-top: 0.5rem; margin-top: 0.5rem;">Total: €<%= order.total.toFixed(2) %></div>
+  </div>
+</div>
+
+<div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem; margin-top: 1.5rem;">
+  <h3 style="margin-bottom: 1rem;">Update Order</h3>
+  <form action="/admin/orders/<%= order.id %>/status" method="POST">
+    <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 1rem; align-items: end;">
+      <div class="form-group">
+        <label>Status</label>
+        <select name="status" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 4px;">
+          <option value="pending" <%= order.status === 'pending' ? 'selected' : '' %>>Pending</option>
+          <option value="confirmed" <%= order.status === 'confirmed' ? 'selected' : '' %>>Confirmed</option>
+          <option value="shipped" <%= order.status === 'shipped' ? 'selected' : '' %>>Shipped</option>
+          <option value="delivered" <%= order.status === 'delivered' ? 'selected' : '' %>>Delivered</option>
+          <option value="cancelled" <%= order.status === 'cancelled' ? 'selected' : '' %>>Cancelled</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Payment</label>
+        <select name="payment_status" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 4px;">
+          <option value="pending" <%= order.payment_status === 'pending' ? 'selected' : '' %>>Pending</option>
+          <option value="paid" <%= order.payment_status === 'paid' ? 'selected' : '' %>>Paid</option>
+          <option value="refunded" <%= order.payment_status === 'refunded' ? 'selected' : '' %>>Refunded</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Notes</label>
+        <input type="text" name="notes" value="<%= order.notes || '' %>" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 4px;">
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Update Order</button>
+  </form>
+</div>
+<%- include('../partials/admin-footer') %>

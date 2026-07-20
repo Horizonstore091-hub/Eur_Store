@@ -1,0 +1,38 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Orders (<%= total %>)</h1>
+</div>
+<div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+  <a href="/admin/orders" class="btn btn-sm <%= !status ? 'btn-primary' : 'btn-outline' %>">All</a>
+  <a href="/admin/orders?status=pending" class="btn btn-sm <%= status === 'pending' ? 'btn-primary' : 'btn-outline' %>">Pending</a>
+  <a href="/admin/orders?status=confirmed" class="btn btn-sm <%= status === 'confirmed' ? 'btn-primary' : 'btn-outline' %>">Confirmed</a>
+  <a href="/admin/orders?status=shipped" class="btn btn-sm <%= status === 'shipped' ? 'btn-primary' : 'btn-outline' %>">Shipped</a>
+  <a href="/admin/orders?status=delivered" class="btn btn-sm <%= status === 'delivered' ? 'btn-primary' : 'btn-outline' %>">Delivered</a>
+  <a href="/admin/orders?status=cancelled" class="btn btn-sm <%= status === 'cancelled' ? 'btn-primary' : 'btn-outline' %>">Cancelled</a>
+  <form method="GET" style="display: flex; gap: 0.3rem; margin-left: auto;">
+    <input type="text" name="search" placeholder="Order #, email, name..." value="<%= search %>" style="padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 4px;">
+    <button type="submit" class="btn btn-sm btn-primary">Search</button>
+  </form>
+</div>
+<table class="admin-table">
+  <thead>
+    <tr><th>Order #</th><th>Customer</th><th>Email</th><th>Total</th><th>Status</th><th>Payment</th><th>Date</th><th></th></tr>
+  </thead>
+  <tbody>
+    <% orders.forEach(o => { %>
+      <tr>
+        <td><strong>#<%= o.order_number %></strong></td>
+        <td><%= o.first_name %> <%= o.last_name %></td>
+        <td style="font-size: 0.85rem;"><%= o.email %></td>
+        <td><strong>€<%= o.total.toFixed(2) %></strong></td>
+        <td><span class="badge badge-<%= o.status %>"><%= o.status %></span></td>
+        <td><span class="badge badge-<%= o.payment_status %>"><%= o.payment_status %></span></td>
+        <td style="font-size: 0.8rem;"><%= new Date(o.created_at).toLocaleDateString() %></td>
+        <td><a href="/admin/orders/<%= o.id %>" class="btn btn-sm btn-outline">View</a></td>
+      </tr>
+    <% }); %>
+    <% if (orders.length === 0) { %><tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray-400);">No orders found</td></tr><% } %>
+  </tbody>
+</table>
+<% if (totalPages > 1) { %><div class="pagination"><% for (let i = 1; i <= totalPages; i++) { %><a href="/admin/orders?page=<%= i %><%= status ? '&status=' + status : '' %>" class="<%= page === i ? 'active' : '' %>"><%= i %></a><% } %></div><% } %>
+<%- include('../partials/admin-footer') %>

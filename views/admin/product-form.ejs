@@ -1,0 +1,109 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1><%= product ? 'Edit' : 'Add' %> Product</h1>
+  <a href="/admin/products" class="btn btn-outline">← Back</a>
+</div>
+<form action="/admin/products/<%= product ? 'edit/' + product.id : 'new' %>" method="POST" class="admin-form">
+  <div class="row-2">
+    <div class="form-group">
+      <label>Product Name *</label>
+      <input type="text" name="name" value="<%= product ? product.name : '' %>" required>
+    </div>
+    <div class="form-group">
+      <label>SKU</label>
+      <input type="text" name="sku" value="<%= product ? product.sku : '' %>">
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Short Description</label>
+    <textarea name="short_description" rows="2"><%= product ? product.short_description : '' %></textarea>
+  </div>
+  <div class="form-group">
+    <label>Full Description</label>
+    <textarea name="description" rows="5"><%= product ? product.description : '' %></textarea>
+  </div>
+  <div class="row-3">
+    <div class="form-group">
+      <label>Price (€) *</label>
+      <input type="number" step="0.01" name="price" value="<%= product ? product.price : '' %>" required>
+    </div>
+    <div class="form-group">
+      <label>Compare Price (€)</label>
+      <input type="number" step="0.01" name="compare_price" value="<%= product ? product.compare_price : '' %>">
+    </div>
+    <div class="form-group">
+      <label>Cost Price (€)</label>
+      <input type="number" step="0.01" name="cost_price" value="<%= product ? product.cost_price : '' %>">
+    </div>
+  </div>
+  <div class="row-3">
+    <div class="form-group">
+      <label>Stock</label>
+      <input type="number" name="stock" value="<%= product ? product.stock : '0' %>">
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select name="category_id">
+        <option value="">No Category</option>
+        <% categories.forEach(c => { %>
+          <option value="<%= c.id %>" <%= product && product.category_id == c.id ? 'selected' : '' %>><%= c.name %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Brand</label>
+      <input type="text" name="brand" value="<%= product ? product.brand : '' %>">
+    </div>
+  </div>
+  <div class="row-3">
+    <div class="form-group">
+      <label>Energy Rating</label>
+      <select name="energy_rating">
+        <option value="">Select</option>
+        <% ['A+++', 'A++', 'A+', 'A', 'B', 'C', 'D'].forEach(r => { %>
+          <option value="<%= r %>" <%= product && product.energy_rating === r ? 'selected' : '' %>><%= r %></option>
+        <% }); %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Noise Level</label>
+      <input type="text" name="noise_level" value="<%= product ? product.noise_level : '' %>" placeholder="e.g. 35 dB">
+    </div>
+    <div class="form-group">
+      <label>Coverage Area</label>
+      <input type="text" name="coverage_area" value="<%= product ? product.coverage_area : '' %>" placeholder="e.g. 30 m²">
+    </div>
+  </div>
+  <div class="row-3">
+    <div class="form-group">
+      <label>Weight (kg)</label>
+      <input type="number" step="0.1" name="weight" value="<%= product ? product.weight : '' %>">
+    </div>
+    <div class="form-group">
+      <label>Dimensions</label>
+      <input type="text" name="dimensions" value="<%= product ? product.dimensions : '' %>" placeholder="e.g. 50×40×30 cm">
+    </div>
+    <div class="form-group">
+      <label>Power Consumption</label>
+      <input type="text" name="power_consumption" value="<%= product ? product.power_consumption : '' %>" placeholder="e.g. 75W">
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Features (one per line)</label>
+    <textarea name="features" rows="4" placeholder="Remote control&#10;Timer function&#10;Oscillation"><%= product && product.features ? JSON.parse(product.features).join('\n') : '' %></textarea>
+  </div>
+  <div class="form-group">
+    <label>Product Image URL</label>
+    <input type="text" name="image" value="<%= product ? product.image : '' %>" placeholder="https://...">
+  </div>
+  <div class="form-group">
+    <label style="display: flex; align-items: center; gap: 0.5rem;">
+      <input type="checkbox" name="is_featured" value="1" <%= product && product.is_featured ? 'checked' : '' %>> Featured Product
+    </label>
+    <label style="display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+      <input type="checkbox" name="is_active" value="1" <%= !product || product.is_active ? 'checked' : '' %>> Active (visible in store)
+    </label>
+  </div>
+  <button type="submit" class="btn btn-primary btn-lg"><%= product ? 'Update' : 'Create' %> Product</button>
+</form>
+<%- include('../partials/admin-footer') %>

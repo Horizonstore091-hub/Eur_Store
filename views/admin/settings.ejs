@@ -1,0 +1,57 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Settings</h1>
+</div>
+<% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
+<form action="/admin/settings" method="POST" class="admin-form">
+  <h3 style="margin-bottom: 1rem;">General</h3>
+  <div class="form-group">
+    <label>Site Name</label>
+    <input type="text" name="site_name" value="<%= settings.site_name || '' %>">
+  </div>
+  <div class="form-group">
+    <label>Site Description</label>
+    <textarea name="site_description" rows="2"><%= settings.site_description || '' %></textarea>
+  </div>
+  <h3 style="margin: 1.5rem 0 1rem;">Shipping</h3>
+  <div class="row-3">
+    <div class="form-group">
+      <label>Shipping Cost (€)</label>
+      <input type="number" step="0.01" name="shipping_europe" value="<%= settings.shipping_europe || '9.99' %>">
+    </div>
+    <div class="form-group">
+      <label>Free Shipping Threshold (€)</label>
+      <input type="number" step="0.01" name="shipping_free_threshold" value="<%= settings.shipping_free_threshold || '99' %>">
+    </div>
+    <div class="form-group">
+      <label>Tax Rate (%)</label>
+      <input type="number" step="0.1" name="tax_rate" value="<%= settings.tax_rate || '19' %>">
+    </div>
+  </div>
+  <h3 style="margin: 1.5rem 0 1rem;">Contact</h3>
+  <div class="row-2">
+    <div class="form-group">
+      <label>Contact Email</label>
+      <input type="email" name="contact_email" value="<%= settings.contact_email || '' %>">
+    </div>
+    <div class="form-group">
+      <label>Contact Phone</label>
+      <input type="text" name="contact_phone" value="<%= settings.contact_phone || '' %>">
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Address</label>
+    <input type="text" name="address" value="<%= settings.address || '' %>">
+  </div>
+  <div class="form-group">
+    <label>Footer Text</label>
+    <input type="text" name="footer_text" value="<%= settings.footer_text || '' %>">
+  </div>
+  <h3 style="margin: 1.5rem 0 1rem;">Payments</h3>
+  <div class="form-group">
+    <label>Stripe Secret Key</label>
+    <input type="password" name="stripe_key" value="<%= settings.stripe_key || '' %>">
+  </div>
+  <button type="submit" class="btn btn-primary btn-lg">Save Settings</button>
+</form>
+<%- include('../partials/admin-footer') %>

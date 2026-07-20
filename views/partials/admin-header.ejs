@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %>Admin - <%= locals.siteName %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❄️</text></svg>">
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <a href="/admin" class="logo">❄️ Euro<span>Cool</span></a>
+    <nav>
+      <a href="/admin" class="<%= currentPath === '/admin' ? 'active' : '' %>">Dashboard</a>
+      <a href="/admin/products" class="<%= currentPath.startsWith('/admin/products') ? 'active' : '' %>">Products</a>
+      <a href="/admin/categories" class="<%= currentPath.startsWith('/admin/categories') ? 'active' : '' %>">Categories</a>
+      <a href="/admin/orders" class="<%= currentPath.startsWith('/admin/orders') ? 'active' : '' %>">Orders</a>
+      <a href="/admin/users" class="<%= currentPath.startsWith('/admin/users') ? 'active' : '' %>">Users</a>
+      <a href="/admin/reviews" class="<%= currentPath.startsWith('/admin/reviews') ? 'active' : '' %>">Reviews</a>
+      <a href="/admin/pages" class="<%= currentPath.startsWith('/admin/pages') ? 'active' : '' %>">Pages</a>
+      <a href="/admin/settings" class="<%= currentPath.startsWith('/admin/settings') ? 'active' : '' %>">Settings</a>
+      <hr style="border-color: var(--gray-700); margin: 1rem;">
+      <a href="/">← View Store</a>
+      <a href="/auth/logout">Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-content">

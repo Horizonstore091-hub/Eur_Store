@@ -1,0 +1,44 @@
+<%- include('../partials/header') %>
+<section class="container" style="padding: 3rem 0; text-align: center;">
+  <div style="max-width: 600px; margin: 0 auto;">
+    <p style="font-size: 4rem; margin-bottom: 1rem;">✅</p>
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Order Confirmed!</h1>
+    <p style="color: var(--gray-500); margin-bottom: 2rem;">Thank you for your order. We'll send you a confirmation email shortly.</p>
+    <div style="background: var(--gray-50); border-radius: 10px; padding: 2rem; text-align: left;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+        <span style="color: var(--gray-500);">Order Number</span>
+        <strong><%= order.order_number %></strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+        <span style="color: var(--gray-500);">Date</span>
+        <strong><%= new Date(order.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %></strong>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+        <span style="color: var(--gray-500);">Status</span>
+        <span class="badge badge-confirmed">Confirmed</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+        <span style="color: var(--gray-500);">Payment</span>
+        <span><%= order.payment_method === 'stripe' ? 'Credit Card' : order.payment_method === 'paypal' ? 'PayPal' : order.payment_method === 'bank_transfer' ? 'Bank Transfer' : 'Cash on Delivery' %></span>
+      </div>
+      <hr style="border: none; border-top: 1px solid var(--gray-200); margin: 1rem 0;">
+      <h3 style="margin-bottom: 0.5rem;">Items Ordered</h3>
+      <% items.forEach(item => { %>
+        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; padding: 0.3rem 0;">
+          <span><%= item.product_name %> × <%= item.quantity %></span>
+          <span>€<%= item.total.toFixed(2) %></span>
+        </div>
+      <% }); %>
+      <hr style="border: none; border-top: 1px solid var(--gray-200); margin: 1rem 0;">
+      <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem;">
+        <span>Total Paid</span>
+        <span>€<%= order.total.toFixed(2) %></span>
+      </div>
+    </div>
+    <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+      <a href="/auth/account" class="btn btn-outline">View My Orders</a>
+      <a href="/products" class="btn btn-primary">Continue Shopping</a>
+    </div>
+  </div>
+</section>
+<%- include('../partials/footer') %>

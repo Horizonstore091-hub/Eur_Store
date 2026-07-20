@@ -1,0 +1,106 @@
+<%- include('partials/header') %>
+<section class="hero">
+  <div class="container">
+    <h1>Stay Cool. Save Energy. 🧊</h1>
+    <p>Premium cooling solutions for European homes and offices. Energy-efficient products to beat the rising temperatures.</p>
+    <a href="/products" class="btn">Shop Now</a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2>Shop by Category</h2>
+      <p>Find exactly what you need to stay comfortable</p>
+    </div>
+    <div class="category-grid">
+      <% categories.forEach(c => { %>
+        <a href="/products?category=<%= c.slug %>" class="category-card">
+          <div class="icon"><%= c.slug === 'air-conditioners' ? '❄️' : c.slug === 'fans' ? '🌀' : c.slug === 'evaporative-coolers' ? '💨' : c.slug === 'smart-home' ? '📱' : c.slug === 'accessories' ? '🔧' : '🌬️' %></div>
+          <h3><%= c.name %></h3>
+          <p><%= c.description ? c.description.substring(0, 60) : 'Cooling solutions' %></p>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background: var(--gray-50);">
+  <div class="container">
+    <div class="section-title">
+      <h2>Featured Products</h2>
+      <p>Our top picks for beating the European heat</p>
+    </div>
+    <div class="product-grid">
+      <% featured.forEach(p => { %>
+        <div class="product-card" style="position: relative;">
+          <% if (p.compare_price && p.compare_price > p.price) { %><span class="badge">-<%= Math.round((1 - p.price/p.compare_price) * 100) %>%</span><% } %>
+          <a href="/products/<%= p.slug %>" class="image">
+            <img src="<%= p.image || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%23e5e7eb%22 width=%22200%22 height=%22200%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2240%22>❄️</text></svg>' %>" alt="<%= p.name %>">
+          </a>
+          <div class="info">
+            <div class="category"><%= p.category_name || 'Cooling' %></div>
+            <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
+            <div class="price">
+              €<%= p.price.toFixed(2) %>
+              <% if (p.compare_price && p.compare_price > p.price) { %><span class="compare-price">€<%= p.compare_price.toFixed(2) %></span><% } %>
+            </div>
+            <% if (p.energy_rating) { %><span class="energy-badge"><%= p.energy_rating %></span><% } %>
+            <form action="/cart/add" method="POST">
+              <input type="hidden" name="product_id" value="<%= p.id %>">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="btn btn-primary btn-sm add-to-cart">Add to Cart</button>
+            </form>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="/products" class="btn btn-outline btn-lg">View All Products →</a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2>Bestsellers</h2>
+      <p>Europe's most popular cooling products this season</p>
+    </div>
+    <div class="product-grid">
+      <% bestsellers.forEach(p => { %>
+        <div class="product-card" style="position: relative;">
+          <a href="/products/<%= p.slug %>" class="image">
+            <img src="<%= p.image || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%23e5e7eb%22 width=%22200%22 height=%22200%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2240%22>❄️</text></svg>' %>" alt="<%= p.name %>">
+          </a>
+          <div class="info">
+            <div class="category"><%= p.category_name || 'Cooling' %></div>
+            <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
+            <div class="price">€<%= p.price.toFixed(2) %></div>
+            <form action="/cart/add" method="POST">
+              <input type="hidden" name="product_id" value="<%= p.id %>">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="btn btn-primary btn-sm add-to-cart">Add to Cart</button>
+            </form>
+          </div>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section style="background: linear-gradient(135deg, #1a73e8, #34a853); color: white; padding: 3rem 0; text-align: center;">
+  <div class="container">
+    <h2 style="font-size: 1.8rem; margin-bottom: 1rem;">🌍 Made for the European Climate</h2>
+    <p style="max-width: 700px; margin: 0 auto 1.5rem; opacity: 0.9;">All our products meet EU energy efficiency standards, are CE certified, and are designed specifically for European electrical systems (220-240V, 50Hz).</p>
+    <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+      <div>✅ CE Certified</div>
+      <div>✅ Energy Class A+++</div>
+      <div>✅ EU Standards</div>
+      <div>✅ 2-Year Warranty</div>
+      <div>✅ Free Shipping Europe</div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

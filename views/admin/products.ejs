@@ -1,0 +1,40 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Products (<%= total %>)</h1>
+  <a href="/admin/products/new" class="btn btn-primary">+ Add Product</a>
+</div>
+<% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
+<div style="margin-bottom: 1rem;">
+  <form method="GET" style="display: flex; gap: 0.5rem;">
+    <input type="text" name="search" placeholder="Search by name or SKU..." value="<%= search %>" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; flex: 1;">
+    <button type="submit" class="btn btn-primary">Search</button>
+    <% if (search) { %><a href="/admin/products" class="btn btn-outline">Clear</a><% } %>
+  </form>
+</div>
+<table class="admin-table">
+  <thead>
+    <tr><th>Name</th><th>SKU</th><th>Price</th><th>Stock</th><th>Category</th><th>Sold</th><th>Status</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    <% products.forEach(p => { %>
+      <tr>
+        <td><a href="/admin/products/edit/<%= p.id %>" style="color: var(--primary); font-weight: 500;"><%= p.name.length > 40 ? p.name.substring(0, 40) + '...' : p.name %></a></td>
+        <td style="font-size: 0.85rem;"><%= p.sku || 'N/A' %></td>
+        <td>€<%= p.price.toFixed(2) %></td>
+        <td><span style="color: <%= p.stock < 5 ? 'var(--danger)' : p.stock === 0 ? 'var(--gray-400)' : 'var(--secondary)' %>;"><%= p.stock %></span></td>
+        <td style="font-size: 0.85rem;"><%= p.category_name || '—' %></td>
+        <td><%= p.total_sold || 0 %></td>
+        <td><span class="badge <%= p.is_active ? 'badge-paid' : 'badge-cancelled' %>"><%= p.is_active ? 'Active' : 'Inactive' %></span></td>
+        <td>
+          <a href="/admin/products/edit/<%= p.id %>" class="btn btn-sm btn-outline">Edit</a>
+          <form action="/admin/products/delete/<%= p.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Delete this product?')">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+    <% if (products.length === 0) { %><tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray-400);">No products found</td></tr><% } %>
+  </tbody>
+</table>
+<% if (totalPages > 1) { %><div class="pagination"><% for (let i = 1; i <= totalPages; i++) { %><a href="/admin/products?page=<%= i %><%= search ? '&search=' + search : '' %>" class="<%= page === i ? 'active' : '' %>"><%= i %></a><% } %></div><% } %>
+<%- include('../partials/admin-footer') %>

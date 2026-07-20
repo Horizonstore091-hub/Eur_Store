@@ -1,0 +1,27 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Pages</h1>
+  <a href="/admin/pages/new" class="btn btn-primary">+ New Page</a>
+</div>
+<% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
+<table class="admin-table">
+  <thead><tr><th>Title</th><th>Slug</th><th>Active</th><th>Updated</th><th>Actions</th></tr></thead>
+  <tbody>
+    <% pages.forEach(p => { %>
+      <tr>
+        <td><strong><%= p.title %></strong></td>
+        <td style="font-size: 0.85rem;"><%= p.slug %></td>
+        <td><span class="badge <%= p.is_active ? 'badge-paid' : 'badge-cancelled' %>"><%= p.is_active ? 'Active' : 'Inactive' %></span></td>
+        <td style="font-size: 0.8rem;"><%= new Date(p.updated_at || p.created_at).toLocaleDateString() %></td>
+        <td>
+          <a href="/admin/pages/edit/<%= p.id %>" class="btn btn-sm btn-outline">Edit</a>
+          <form action="/admin/pages/delete/<%= p.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Delete this page?')">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+    <% if (pages.length === 0) { %><tr><td colspan="5" style="text-align: center; padding: 2rem; color: var(--gray-400);">No pages created</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/admin-footer') %>

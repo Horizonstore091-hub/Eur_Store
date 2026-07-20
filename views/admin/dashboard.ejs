@@ -1,0 +1,72 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Dashboard</h1>
+  <span style="color: var(--gray-500);"><%= new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) %></span>
+</div>
+<div class="stats-grid">
+  <div class="stat-card"><div class="value">€<%= Number(stats.totalRevenue).toFixed(0) %></div><div class="label">Total Revenue</div></div>
+  <div class="stat-card"><div class="value"><%= stats.totalOrders %></div><div class="label">Total Orders</div></div>
+  <div class="stat-card"><div class="value" style="color: var(--accent);"><%= stats.pendingOrders %></div><div class="label">Pending Orders</div></div>
+  <div class="stat-card"><div class="value"><%= stats.activeProducts %></div><div class="label">Active Products</div></div>
+  <div class="stat-card"><div class="value"><%= stats.totalUsers %></div><div class="label">Total Users</div></div>
+  <div class="stat-card"><div class="value" style="color: var(--danger);"><%= stats.lowStock %></div><div class="label">Low Stock (<5)</div></div>
+  <div class="stat-card"><div class="value" style="color: var(--danger);"><%= stats.outOfStock %></div><div class="label">Out of Stock</div></div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+  <div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem;">
+    <h3 style="margin-bottom: 1rem;">Recent Orders</h3>
+    <table class="admin-table">
+      <thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead>
+      <tbody>
+        <% recentOrders.forEach(o => { %>
+          <tr>
+            <td><a href="/admin/orders/<%= o.id %>" style="color: var(--primary);">#<%= o.order_number %></a></td>
+            <td><%= o.first_name %> <%= o.last_name %></td>
+            <td>€<%= o.total.toFixed(2) %></td>
+            <td><span class="badge badge-<%= o.status %>"><%= o.status %></span></td>
+            <td style="font-size: 0.8rem;"><%= new Date(o.created_at).toLocaleDateString() %></td>
+          </tr>
+        <% }); %>
+        <% if (recentOrders.length === 0) { %><tr><td colspan="5" style="text-align: center; color: var(--gray-400);">No orders yet</td></tr><% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem;">
+    <h3 style="margin-bottom: 1rem;">Top Selling Products</h3>
+    <table class="admin-table">
+      <thead><tr><th>Product</th><th>SKU</th><th>Sold</th><th>Stock</th></tr></thead>
+      <tbody>
+        <% topProducts.forEach(p => { %>
+          <tr>
+            <td><a href="/admin/products/edit/<%= p.id %>" style="color: var(--primary);"><%= p.name.length > 30 ? p.name.substring(0, 30) + '...' : p.name %></a></td>
+            <td style="font-size: 0.8rem;"><%= p.sku || 'N/A' %></td>
+            <td><%= p.total_sold %></td>
+            <td><span style="color: <%= p.stock < 5 ? 'var(--danger)' : 'var(--secondary)' %>;"><%= p.stock %></span></td>
+          </tr>
+        <% }); %>
+        <% if (topProducts.length === 0) { %><tr><td colspan="4" style="text-align: center; color: var(--gray-400);">No sales yet</td></tr><% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% if (monthlyRevenue.length > 0) { %>
+<div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem; margin-top: 1.5rem;">
+  <h3 style="margin-bottom: 1rem;">Monthly Revenue</h3>
+  <table class="admin-table">
+    <thead><tr><th>Month</th><th>Revenue</th><th>Orders</th></tr></thead>
+    <tbody>
+      <% monthlyRevenue.forEach(m => { %>
+        <tr>
+          <td><%= m.month %></td>
+          <td><strong>€<%= Number(m.revenue).toFixed(2) %></strong></td>
+          <td><%= m.orders_count %></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
+<% } %>
+<%- include('../partials/admin-footer') %>

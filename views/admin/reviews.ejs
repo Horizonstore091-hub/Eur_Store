@@ -1,0 +1,35 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Reviews</h1>
+</div>
+<% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
+<table class="admin-table">
+  <thead>
+    <tr><th>Product</th><th>Customer</th><th>Rating</th><th>Title</th><th>Comment</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    <% reviews.forEach(r => { %>
+      <tr>
+        <td style="font-size: 0.85rem;"><%= r.product_name || 'Deleted' %></td>
+        <td><%= r.first_name || 'Anonymous' %> <%= r.last_name || '' %></td>
+        <td style="color: var(--accent);"><% for(let i=0; i<5; i++) { %><%= i < r.rating ? '★' : '☆' %><% } %></td>
+        <td style="font-size: 0.85rem;"><%= r.title || '—' %></td>
+        <td style="font-size: 0.85rem; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"><%= r.comment || '—' %></td>
+        <td><span class="badge <%= r.is_approved ? 'badge-paid' : 'badge-pending' %>"><%= r.is_approved ? 'Approved' : 'Pending' %></span></td>
+        <td style="font-size: 0.8rem;"><%= new Date(r.created_at).toLocaleDateString() %></td>
+        <td>
+          <% if (!r.is_approved) { %>
+            <form action="/admin/reviews/approve/<%= r.id %>" method="POST" style="display: inline;">
+              <button type="submit" class="btn btn-sm btn-success">Approve</button>
+            </form>
+          <% } %>
+          <form action="/admin/reviews/delete/<%= r.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Delete this review?')">
+            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+    <% if (reviews.length === 0) { %><tr><td colspan="8" style="text-align: center; padding: 2rem; color: var(--gray-400);">No reviews yet</td></tr><% } %>
+  </tbody>
+</table>
+<%- include('../partials/admin-footer') %>

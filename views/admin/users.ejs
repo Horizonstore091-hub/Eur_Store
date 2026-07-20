@@ -1,0 +1,37 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Users (<%= total %>)</h1>
+</div>
+<% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
+<div style="margin-bottom: 1rem;">
+  <form method="GET" style="display: flex; gap: 0.5rem;">
+    <input type="text" name="search" placeholder="Search by name or email..." value="<%= search %>" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; flex: 1;">
+    <button type="submit" class="btn btn-primary">Search</button>
+    <% if (search) { %><a href="/admin/users" class="btn btn-outline">Clear</a><% } %>
+  </form>
+</div>
+<table class="admin-table">
+  <thead>
+    <tr><th>Name</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Admin</th><th>Joined</th><th>Actions</th></tr>
+  </thead>
+  <tbody>
+    <% users.forEach(u => { %>
+      <tr>
+        <td><strong><%= u.first_name %> <%= u.last_name %></strong></td>
+        <td style="font-size: 0.85rem;"><%= u.email %></td>
+        <td><%= u.order_count || 0 %></td>
+        <td>€<%= Number(u.total_spent || 0).toFixed(2) %></td>
+        <td><span class="badge <%= u.is_admin ? 'badge-paid' : 'badge-pending' %>"><%= u.is_admin ? 'Admin' : 'User' %></span></td>
+        <td style="font-size: 0.8rem;"><%= new Date(u.created_at).toLocaleDateString() %></td>
+        <td>
+          <form action="/admin/users/toggle-admin/<%= u.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Toggle admin status for <%= u.first_name %>?')">
+            <button type="submit" class="btn btn-sm <%= u.is_admin ? 'btn-danger' : 'btn-outline' %>"><%= u.is_admin ? 'Demote' : 'Promote' %></button>
+          </form>
+        </td>
+      </tr>
+    <% }); %>
+    <% if (users.length === 0) { %><tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--gray-400);">No users found</td></tr><% } %>
+  </tbody>
+</table>
+<% if (totalPages > 1) { %><div class="pagination"><% for (let i = 1; i <= totalPages; i++) { %><a href="/admin/users?page=<%= i %><%= search ? '&search=' + search : '' %>" class="<%= page === i ? 'active' : '' %>"><%= i %></a><% } %></div><% } %>
+<%- include('../partials/admin-footer') %>

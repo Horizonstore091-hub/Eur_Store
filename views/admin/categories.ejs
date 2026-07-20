@@ -1,0 +1,48 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Categories</h1>
+</div>
+<% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+  <div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem;">
+    <h3 style="margin-bottom: 1rem;">Add New Category</h3>
+    <form action="/admin/categories/new" method="POST">
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" required style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 4px;">
+      </div>
+      <div class="form-group" style="margin-top: 0.5rem;">
+        <label>Description</label>
+        <textarea name="description" style="width: 100%; padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 4px;"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Add Category</button>
+    </form>
+  </div>
+  <div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem;">
+    <h3 style="margin-bottom: 1rem;">Existing Categories</h3>
+    <table class="admin-table">
+      <thead><tr><th>Name</th><th>Slug</th><th>Products</th><th>Sort</th><th>Actions</th></tr></thead>
+      <tbody>
+        <% categories.forEach(c => { %>
+          <tr>
+            <td><strong><%= c.name %></strong></td>
+            <td style="font-size: 0.85rem;"><%= c.slug %></td>
+            <td><%= c.product_count || 0 %></td>
+            <td><%= c.sort_order || 0 %></td>
+            <td>
+              <form action="/admin/categories/edit/<%= c.id %>" method="POST" style="display: inline;">
+                <input type="text" name="name" value="<%= c.name %>" style="width: 120px; padding: 0.2rem; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 0.8rem;">
+                <input type="number" name="sort_order" value="<%= c.sort_order || 0 %>" style="width: 50px; padding: 0.2rem; border: 1px solid var(--gray-300); border-radius: 4px; font-size: 0.8rem;">
+                <button type="submit" class="btn btn-sm btn-outline">Save</button>
+              </form>
+              <form action="/admin/categories/delete/<%= c.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Delete this category? Products will be uncategorized.')">
+                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/admin-footer') %>

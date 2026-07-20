@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %><%= locals.siteName %></title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❄️</text></svg>">
+</head>
+<body>
+<div class="top-bar">
+  <div class="container">
+    <span>❄️ Free shipping across Europe on orders over €99</span>
+    <div>
+      <a href="/auth/account">My Account</a>
+      <% if (user) { %>
+        <a href="/auth/logout">Logout</a>
+      <% } else { %>
+        <a href="/auth/login">Login</a>
+      <% } %>
+    </div>
+  </div>
+</div>
+<header>
+  <div class="container header-inner">
+    <a href="/" class="logo">❄️ Euro<span>Cool</span></a>
+    <nav>
+      <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a>
+      <a href="/products" class="<%= currentPath.startsWith('/products') ? 'active' : '' %>">Products</a>
+      <% (typeof categories !== 'undefined' ? categories : []).forEach(c => { %>
+        <a href="/products?category=<%= c.slug %>"><%= c.name %></a>
+      <% }); %>
+    </nav>
+    <div class="header-actions">
+      <form action="/search" method="GET" class="search-form">
+        <input type="text" name="q" placeholder="Search..." required>
+        <button type="submit">Search</button>
+      </form>
+      <a href="/cart">
+        Cart
+        <% if (locals.cartCount > 0) { %><span class="cart-badge"><%= cartCount %></span><% } %>
+      </a>
+    </div>
+  </div>
+</header>
+<main>
