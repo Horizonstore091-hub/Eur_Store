@@ -9,7 +9,8 @@
       <h2 style="font-size: 16px; font-weight: 700; margin-bottom: 10px;">Account Details</h2>
       <p style="font-size: 13px; color: var(--text-secondary);"><%= user.first_name %> <%= user.last_name %></p>
       <p style="font-size: 13px; color: var(--text-secondary);"><%= user.email %></p>
-      <a href="/auth/logout" class="btn btn-sm btn-secondary" style="margin-top: 10px;">Logout</a>
+      <% if (user.is_admin) { %><a href="/admin" class="btn btn-sm btn-accent" style="margin-top: 6px;">Admin Dashboard</a><% } %>
+      <a href="/auth/logout" class="btn btn-sm btn-secondary" style="margin-top: 6px;">Logout</a>
     </div>
 
     <div style="background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 20px;">

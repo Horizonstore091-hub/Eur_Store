@@ -24,6 +24,7 @@
     <div class="header-links">
       <% if (user) { %>
         <a href="/auth/account"><span>Hello, <%= user.first_name %></span><strong>Account</strong></a>
+        <% if (user.is_admin) { %><a href="/admin"><span>Admin</span><strong>Dashboard</strong></a><% } %>
         <a href="/auth/logout"><span>&nbsp;</span><strong>Logout</strong></a>
       <% } else { %>
         <a href="/auth/login"><span>Hello, Sign in</span><strong>Account</strong></a>
