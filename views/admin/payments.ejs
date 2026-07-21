@@ -1,0 +1,67 @@
+<%- include('../partials/admin-header') %>
+<div class="admin-header">
+  <h1>Payments (<%= total %>)</h1>
+</div>
+<% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
+<div style="margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap;">
+  <a href="/admin/payments" class="btn btn-sm <%= !status ? 'btn-primary' : 'btn-secondary' %>">All</a>
+  <a href="/admin/payments?status=pending" class="btn btn-sm <%= status === 'pending' ? 'btn-primary' : 'btn-secondary' %>">Pending</a>
+  <a href="/admin/payments?status=paid" class="btn btn-sm <%= status === 'paid' ? 'btn-primary' : 'btn-secondary' %>">Paid</a>
+  <a href="/admin/payments?status=refunded" class="btn btn-sm <%= status === 'refunded' ? 'btn-primary' : 'btn-secondary' %>">Refunded</a>
+  <form method="GET" style="display: flex; gap: 0.3rem; margin-left: auto;">
+    <input type="text" name="search" placeholder="Order # or email..." value="<%= search %>" style="padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 4px;">
+    <button type="submit" class="btn btn-sm btn-primary">Search</button>
+  </form>
+</div>
+
+<% payments.forEach(p => { %>
+  <div style="background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 10px;">
+    <form action="/admin/payments/update/<%= p.id %>" method="POST">
+      <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 10px; align-items: end;">
+        <div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">Order</div>
+          <strong>#<%= p.order_number %></strong>
+          <div style="font-size: 11px; color: var(--text-secondary);"><%= p.email %></div>
+          <div style="font-size: 11px; color: var(--text-secondary);"><%= p.first_name %> <%= p.last_name %></div>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">Method</div>
+          <div style="font-size: 13px;"><%= paymentMethodLabels[p.payment_method] || p.payment_method %></div>
+          <div style="font-size: 14px; font-weight: 700; margin-top: 4px;">&euro;<%= p.total.toFixed(2) %></div>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">Status</div>
+          <select name="payment_status" style="width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px;">
+            <option value="pending" <%= p.payment_status === 'pending' ? 'selected' : '' %>>Pending</option>
+            <option value="paid" <%= p.payment_status === 'paid' ? 'selected' : '' %>>Paid</option>
+            <option value="refunded" <%= p.payment_status === 'refunded' ? 'selected' : '' %>>Refunded</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">Notes / TXID</div>
+          <input type="text" name="notes" value="<%= p.notes || '' %>" placeholder="TXID or gift code" style="width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px;">
+        </div>
+        <div>
+          <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 2px;">&nbsp;</div>
+          <button type="submit" class="btn btn-sm btn-primary" style="width: 100%;">Update</button>
+        </div>
+      </div>
+      <div style="font-size: 11px; color: var(--text-secondary); margin-top: 6px;">
+        Created: <%= new Date(p.created_at).toLocaleString() %>
+      </div>
+    </form>
+  </div>
+<% }); %>
+
+<% if (payments.length === 0) { %>
+  <div style="text-align: center; padding: 40px; color: var(--text-secondary);">No payments found.</div>
+<% } %>
+
+<% if (totalPages > 1) { %>
+  <div class="pagination">
+    <% for (let i = 1; i <= totalPages; i++) { %>
+      <a href="/admin/payments?page=<%= i %><%= status ? '&status=' + status : '' %>" class="<%= page === i ? 'active' : '' %>"><%= i %></a>
+    <% } %>
+  </div>
+<% } %>
+<%- include('../partials/admin-footer') %>

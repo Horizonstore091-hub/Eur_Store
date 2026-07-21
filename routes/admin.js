@@ -223,8 +223,8 @@ router.get('/users', (req, res) => {
   let where = '';
   let params = [];
   if (search) {
-    where = 'WHERE u.name LIKE ? OR u.email LIKE ?';
-    params.push(`%${search}%`, `%${search}%`);
+    where = 'WHERE u.first_name LIKE ? OR u.last_name LIKE ? OR u.email LIKE ?';
+    params.push(`%${search}%`, `%${search}%`, `%${search}%`);
   }
 
   const total = db.prepare(`SELECT COUNT(*) as count FROM users u ${where}`).get(...params);
@@ -238,7 +238,32 @@ router.get('/users', (req, res) => {
     LIMIT ? OFFSET ?
   `).all(...params, limit, offset);
 
-  res.render('admin/users', { title: 'Manage Users', users, search, page, totalPages: Math.ceil(total.count / limit), total: total.count });
+  const totalCount = db.prepare('SELECT COUNT(*) as count FROM users').get().count;
+
+  res.render('admin/users', { title: 'Manage Users', users, search, page, totalPages: Math.ceil(total.count / limit), total: totalCount });
+});
+
+router.get('/users/edit/:id', (req, res) => {
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
+  if (!user) return res.redirect('/admin/users');
+  res.render('admin/user-form', { title: 'Edit User', user });
+});
+
+router.post('/users/edit/:id', (req, res) => {
+  const { first_name, last_name, email, password, address, city, postal_code, country, phone, is_admin } = req.body;
+  const user = db.prepare('SELECT * FROM users WHERE id = ?').get(req.params.id);
+  if (!user) return res.redirect('/admin/users');
+
+  if (password && password.length > 0) {
+    const hash = bcrypt.hashSync(password, 10);
+    db.prepare('UPDATE users SET first_name=?, last_name=?, email=?, password=?, address=?, city=?, postal_code=?, country=?, phone=?, is_admin=?, updated_at=CURRENT_TIMESTAMP WHERE id=?')
+      .run(first_name, last_name, email, hash, address, city, postal_code, country, phone, is_admin ? 1 : 0, req.params.id);
+  } else {
+    db.prepare('UPDATE users SET first_name=?, last_name=?, email=?, address=?, city=?, postal_code=?, country=?, phone=?, is_admin=?, updated_at=CURRENT_TIMESTAMP WHERE id=?')
+      .run(first_name, last_name, email, address, city, postal_code, country, phone, is_admin ? 1 : 0, req.params.id);
+  }
+
+  res.redirect('/admin/users?success=User updated');
 });
 
 router.post('/users/toggle-admin/:id', (req, res) => {
@@ -247,6 +272,64 @@ router.post('/users/toggle-admin/:id', (req, res) => {
     db.prepare('UPDATE users SET is_admin = ? WHERE id = ?').run(user.is_admin ? 0 : 1, req.params.id);
   }
   res.redirect('/admin/users?success=User updated');
+});
+
+router.get('/payments', (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = 30;
+  const offset = (page - 1) * limit;
+  const status = req.query.status || '';
+  const search = req.query.search || '';
+
+  let where = '';
+  let params = [];
+  if (status) {
+    where = 'WHERE o.payment_status = ?';
+    params.push(status);
+  }
+  if (search) {
+    where = where ? `${where} AND (o.order_number LIKE ? OR o.email LIKE ?)` : 'WHERE (o.order_number LIKE ? OR o.email LIKE ?)';
+    params.push(`%${search}%`, `%${search}%`);
+  }
+
+  const total = db.prepare(`SELECT COUNT(*) as count FROM orders o ${where}`).get(...params);
+  const payments = db.prepare(`
+    SELECT o.id, o.order_number, o.email, o.first_name, o.last_name,
+      o.total, o.payment_method, o.payment_status, o.notes, o.created_at,
+      o.currency
+    FROM orders o
+    ${where}
+    ORDER BY o.created_at DESC
+    LIMIT ? OFFSET ?
+  `).all(...params, limit, offset);
+
+  const paymentMethodLabels = {
+    crypto_btc: 'Bitcoin (BTC)',
+    crypto_eth: 'Ethereum (ETH)',
+    crypto_usdt: 'Tether (USDT)',
+    crypto_usdc: 'USD Coin (USDC)',
+    gift_steam: 'Steam Gift Card',
+    gift_razer: 'Razer Gold',
+    gift_apple: 'Apple Gift Card',
+  };
+
+  res.render('admin/payments', {
+    title: 'Payments',
+    payments,
+    paymentMethodLabels,
+    status,
+    search,
+    page,
+    totalPages: Math.ceil(total.count / limit),
+    total: total.count
+  });
+});
+
+router.post('/payments/update/:id', (req, res) => {
+  const { payment_status, notes } = req.body;
+  db.prepare("UPDATE orders SET payment_status=?, notes=COALESCE(?, notes), updated_at=CURRENT_TIMESTAMP WHERE id=?")
+    .run(payment_status, notes, req.params.id);
+  res.redirect('/admin/payments?success=Payment updated');
 });
 
 router.get('/settings', (req, res) => {
