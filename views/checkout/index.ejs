@@ -1,47 +1,47 @@
 <%- include('../partials/header') %>
 <section class="container">
-  <h1 style="font-size: 1.5rem; margin: 2rem 0;">Checkout</h1>
+  <h1 style="font-size: 1.3rem; font-weight: 400; margin: 15px 0;">Checkout</h1>
   <% if (invalidStock) { %>
-    <div class="alert alert-error">Some items in your cart are no longer available in the requested quantity. Please <a href="/cart" style="color: inherit; font-weight: 600;">update your cart</a>.</div>
+    <div class="alert alert-error">Some items in your cart are no longer available. <a href="/cart" style="color: inherit; font-weight: 700;">Update your cart</a></div>
   <% } else { %>
     <div class="checkout-page">
       <div>
         <form action="/checkout/place" method="POST" class="checkout-form">
-          <h3 style="margin-bottom: 1rem;">Shipping Information</h3>
+          <h2>Shipping Address</h2>
           <div class="row-2">
             <div class="form-group">
-              <label>First Name *</label>
+              <label>First Name</label>
               <input type="text" name="first_name" value="<%= user.first_name %>" required>
             </div>
             <div class="form-group">
-              <label>Last Name *</label>
+              <label>Last Name</label>
               <input type="text" name="last_name" value="<%= user.last_name %>" required>
             </div>
           </div>
           <div class="form-group">
-            <label>Email *</label>
+            <label>Email</label>
             <input type="email" name="email" value="<%= user.email %>" required>
           </div>
           <div class="form-group">
             <label>Phone</label>
-            <input type="tel" name="phone">
+            <input type="tel" name="phone" placeholder="+49 30 12345678">
           </div>
           <div class="form-group">
-            <label>Address *</label>
+            <label>Address</label>
             <input type="text" name="address" placeholder="Street address" required>
           </div>
           <div class="row-2">
             <div class="form-group">
-              <label>City *</label>
+              <label>City</label>
               <input type="text" name="city" required>
             </div>
             <div class="form-group">
-              <label>Postal Code *</label>
+              <label>Postal Code</label>
               <input type="text" name="postal_code" required>
             </div>
           </div>
           <div class="form-group">
-            <label>Country *</label>
+            <label>Country</label>
             <select name="country" required>
               <option value="DE">Germany</option>
               <option value="AT">Austria</option>
@@ -65,16 +65,69 @@
               <option value="HU">Hungary</option>
             </select>
           </div>
-          <h3 style="margin: 1.5rem 0 1rem;">Payment Method</h3>
-          <div class="form-group">
-            <select name="payment_method" required>
-              <option value="stripe">Credit Card (Stripe)</option>
-              <option value="paypal">PayPal</option>
-              <option value="bank_transfer">Bank Transfer</option>
-              <option value="cod">Cash on Delivery</option>
-            </select>
+
+          <h2>Payment Method</h2>
+          <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">We accept cryptocurrency and digital gift cards</p>
+
+          <div class="payment-methods">
+            <label class="payment-method selected">
+              <input type="radio" name="payment_method" value="crypto_btc" checked>
+              <div>
+                <div class="method-name">Bitcoin (BTC)</div>
+                <div class="method-desc">Pay with Bitcoin &mdash; fast, secure, borderless</div>
+              </div>
+            </label>
+            <label class="payment-method">
+              <input type="radio" name="payment_method" value="crypto_eth">
+              <div>
+                <div class="method-name">Ethereum (ETH)</div>
+                <div class="method-desc">Pay with Ethereum &mdash; smart contract secured</div>
+              </div>
+            </label>
+            <label class="payment-method">
+              <input type="radio" name="payment_method" value="crypto_usdt">
+              <div>
+                <div class="method-name">Tether (USDT)</div>
+                <div class="method-desc">Stablecoin &mdash; value pegged to USD</div>
+              </div>
+            </label>
+            <label class="payment-method">
+              <input type="radio" name="payment_method" value="crypto_usdc">
+              <div>
+                <div class="method-name">USD Coin (USDC)</div>
+                <div class="method-desc">Stablecoin &mdash; fully reserved</div>
+              </div>
+            </label>
+            <label class="payment-method">
+              <input type="radio" name="payment_method" value="gift_steam">
+              <div>
+                <div class="method-name">Steam Gift Card</div>
+                <div class="method-desc">Pay using Steam wallet gift cards &mdash; enter code at checkout</div>
+              </div>
+            </label>
+            <label class="payment-method">
+              <input type="radio" name="payment_method" value="gift_razer">
+              <div>
+                <div class="method-name">Razer Gold Gift Card</div>
+                <div class="method-desc">Pay using Razer Gold gift cards &mdash; enter code at checkout</div>
+              </div>
+            </label>
+            <label class="payment-method">
+              <input type="radio" name="payment_method" value="gift_apple">
+              <div>
+                <div class="method-name">Apple Gift Card</div>
+                <div class="method-desc">Pay using Apple gift cards &mdash; enter code at checkout</div>
+              </div>
+            </label>
           </div>
-          <button type="submit" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 1rem;">Place Order — €<%= total.toFixed(2) %></button>
+
+          <div style="margin: 12px 0;">
+            <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text-secondary);">
+              <input type="checkbox" name="gift_card_code" placeholder="Gift card code (if applicable)" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top: 12px;">Place Order &mdash; &euro;<%= total.toFixed(2) %></button>
         </form>
       </div>
 
@@ -82,29 +135,39 @@
         <h3>Order Summary</h3>
         <% items.forEach(item => { %>
           <div class="item">
-            <span><%= item.name %> × <%= item.quantity %></span>
-            <span>€<%= item.total.toFixed(2) %></span>
+            <span><%= item.name %> x <%= item.quantity %></span>
+            <span>&euro;<%= item.total.toFixed(2) %></span>
           </div>
         <% }); %>
-        <div class="item" style="border-top: 1px solid var(--gray-200); padding-top: 1rem; margin-top: 0.5rem;">
-          <span>Subtotal</span><span>€<%= subtotal.toFixed(2) %></span>
+        <div class="item" style="border-top: 1px solid var(--border); padding-top: 10px; margin-top: 6px;">
+          <span>Subtotal</span><span>&euro;<%= subtotal.toFixed(2) %></span>
         </div>
         <div class="item">
-          <span>Shipping</span><span><%= shippingCost === 0 ? 'FREE' : '€' + shippingCost.toFixed(2) %></span>
+          <span>Delivery</span><span><%= shippingCost === 0 ? 'FREE' : '&euro;' + shippingCost.toFixed(2) %></span>
         </div>
         <div class="item">
-          <span>Tax (19% VAT)</span><span>€<%= tax.toFixed(2) %></span>
+          <span>VAT (19%)</span><span>&euro;<%= tax.toFixed(2) %></span>
         </div>
-        <div class="item" style="font-weight: 700; font-size: 1.1rem; border-top: 2px solid var(--gray-300); padding-top: 1rem; margin-top: 0.5rem;">
-          <span>Total</span><span>€<%= total.toFixed(2) %></span>
+        <div class="item" style="font-weight: 700; font-size: 1.1rem; border-top: 2px solid var(--border); padding-top: 10px; margin-top: 6px;">
+          <span>Total</span><span>&euro;<%= total.toFixed(2) %></span>
         </div>
-        <div style="margin-top: 1.5rem; padding: 1rem; background: var(--gray-100); border-radius: 6px; font-size: 0.8rem; color: var(--gray-500);">
-          🔒 Secure checkout. Your payment information is processed securely.<br>
-          📦 Free returns within 30 days.<br>
-          🇪🇺 Shipped from our EU warehouse.
+        <div style="margin-top: 16px; padding: 12px; background: var(--bg-light); border-radius: 4px; font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+          Secure checkout. We accept cryptocurrency and digital gift cards only.<br>
+          Your payment information is encrypted.<br>
+          Free returns within 30 days.<br>
+          Shipped from our EU warehouse.
         </div>
       </div>
     </div>
   <% } %>
 </section>
+<script>
+document.querySelectorAll('.payment-method').forEach(el => {
+  el.addEventListener('click', function() {
+    document.querySelectorAll('.payment-method').forEach(e => e.classList.remove('selected'));
+    this.classList.add('selected');
+    this.querySelector('input[type="radio"]').checked = true;
+  });
+});
+</script>
 <%- include('../partials/footer') %>

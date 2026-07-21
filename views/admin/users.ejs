@@ -7,7 +7,7 @@
   <form method="GET" style="display: flex; gap: 0.5rem;">
     <input type="text" name="search" placeholder="Search by name or email..." value="<%= search %>" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; flex: 1;">
     <button type="submit" class="btn btn-primary">Search</button>
-    <% if (search) { %><a href="/admin/users" class="btn btn-outline">Clear</a><% } %>
+    <% if (search) { %><a href="/admin/users" class="btn btn-secondary">Clear</a><% } %>
   </form>
 </div>
 <table class="admin-table">
@@ -25,7 +25,7 @@
         <td style="font-size: 0.8rem;"><%= new Date(u.created_at).toLocaleDateString() %></td>
         <td>
           <form action="/admin/users/toggle-admin/<%= u.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Toggle admin status for <%= u.first_name %>?')">
-            <button type="submit" class="btn btn-sm <%= u.is_admin ? 'btn-danger' : 'btn-outline' %>"><%= u.is_admin ? 'Demote' : 'Promote' %></button>
+            <button type="submit" class="btn btn-sm <%= u.is_admin ? 'btn-danger' : 'btn-secondary' %>"><%= u.is_admin ? 'Demote' : 'Promote' %></button>
           </form>
         </td>
       </tr>

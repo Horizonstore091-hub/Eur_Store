@@ -1,6 +1,6 @@
 <%- include('partials/header') %>
-<section class="container" style="padding: 2rem 0; max-width: 800px; margin: 0 auto;">
-  <h1 style="font-size: 1.8rem; margin-bottom: 1.5rem;"><%= page.title %></h1>
-  <div style="line-height: 1.8; color: var(--gray-600);"><%= page.content ? page.content.replace(/\n/g, '<br>') : '' %></div>
+<section class="container" style="padding: 20px 0; max-width: 800px; margin: 0 auto;">
+  <h1 style="font-size: 1.5rem; font-weight: 400; margin-bottom: 16px;"><%= page.title %></h1>
+  <div style="line-height: 1.8; color: var(--text); font-size: 14px;"><%= page.content ? page.content.replace(/\n/g, '<br>') : '' %></div>
 </section>
 <%- include('partials/footer') %>

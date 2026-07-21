@@ -1,11 +1,10 @@
 <%- include('../partials/header') %>
 <section class="container cart-page">
-  <h1 style="font-size: 1.5rem; margin-bottom: 1.5rem;">Shopping Cart</h1>
+  <h1>Shopping Cart</h1>
   <% if (items.length === 0) { %>
-    <div style="text-align: center; padding: 3rem;">
-      <p style="font-size: 4rem; margin-bottom: 1rem;">🛒</p>
+    <div style="text-align: center; padding: 40px;">
       <h3>Your cart is empty</h3>
-      <p style="color: var(--gray-500); margin: 0.5rem 0 1.5rem;">Start shopping for cooling products!</p>
+      <p style="color: var(--text-secondary); margin: 8px 0 16px;">Discover our range of cooling products.</p>
       <a href="/products" class="btn btn-primary btn-lg">Browse Products</a>
     </div>
   <% } else { %>
@@ -26,23 +25,24 @@
               <td>
                 <div class="product-info">
                   <a href="/products/<%= item.slug %>">
-                    <img src="<%= item.image || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 80 80%22><rect fill=%22%23e5e7eb%22 width=%2280%22 height=%2280%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2220%22>❄️</text></svg>' %>" alt="<%= item.name %>">
+                    <img src="<%= item.image || '/images/placeholder.svg' %>" alt="<%= item.name %>">
                   </a>
                   <div>
-                    <a href="/products/<%= item.slug %>" style="text-decoration: none; color: var(--gray-800); font-weight: 500;"><%= item.name %></a>
-                    <div style="font-size: 0.8rem; color: var(--gray-500);">SKU: <%= item.sku || 'N/A' %></div>
+                    <a href="/products/<%= item.slug %>" style="text-decoration: none; color: var(--text); font-weight: 500;"><%= item.name %></a>
+                    <div style="font-size: 12px; color: var(--text-secondary);">SKU: <%= item.sku || 'N/A' %></div>
+                    <% if (item.energy_rating) { %><span class="energy-badge"><%= item.energy_rating %></span><% } %>
                   </div>
                 </div>
               </td>
-              <td>€<%= item.price.toFixed(2) %></td>
+              <td>&euro;<%= item.price.toFixed(2) %></td>
               <td>
-                <form action="/cart/update" method="POST" style="display: flex; align-items: center; gap: 0.3rem;">
+                <form action="/cart/update" method="POST" style="display: flex; align-items: center; gap: 6px;">
                   <input type="hidden" name="product_id" value="<%= item.id %>">
-                  <input type="number" name="quantity" value="<%= item.quantity %>" min="0" class="qty-input">
-                  <button type="submit" class="btn btn-sm btn-outline">Update</button>
+                  <input type="number" name="quantity" value="<%= item.quantity %>" min="0" style="width: 60px; padding: 6px; border: 1px solid var(--border); border-radius: 4px;">
+                  <button type="submit" class="btn btn-sm btn-secondary">Update</button>
                 </form>
               </td>
-              <td><strong>€<%= (item.price * item.quantity).toFixed(2) %></strong></td>
+              <td><strong>&euro;<%= (item.price * item.quantity).toFixed(2) %></strong></td>
               <td>
                 <form action="/cart/remove" method="POST">
                   <input type="hidden" name="product_id" value="<%= item.id %>">
@@ -57,21 +57,21 @@
 
     <div class="cart-summary">
       <% if (subtotal < freeThreshold) { %>
+        <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">
+          Add <strong>&euro;<%= (freeThreshold - subtotal).toFixed(2) %></strong> more for free delivery
+        </div>
         <div class="free-shipping-progress">
           <div class="fill" style="width: <%= Math.min(100, (subtotal / freeThreshold) * 100) %>%"></div>
         </div>
-        <p style="font-size: 0.85rem; color: var(--gray-500); text-align: center;">
-          Add €<%= (freeThreshold - subtotal).toFixed(2) %> more for free shipping!
-        </p>
       <% } else { %>
-        <div class="free-shipping-notice">🎉 You've qualified for free shipping across Europe!</div>
+        <div class="free-shipping-bar">You qualify for free delivery across Europe!</div>
       <% } %>
-      <div class="row"><span>Subtotal</span><span>€<%= subtotal.toFixed(2) %></span></div>
-      <div class="row"><span>Shipping</span><span><%= shippingFree ? 'FREE' : '€' + shippingCost.toFixed(2) %></span></div>
-      <div class="row total"><span>Total</span><span>€<%= (subtotal + (shippingFree ? 0 : shippingCost)).toFixed(2) %></span></div>
-      <a href="/checkout" class="btn btn-primary btn-lg" style="width: 100%; text-align: center; margin-top: 1rem;">Proceed to Checkout</a>
-      <div style="text-align: center; margin-top: 0.5rem;">
-        <a href="/products" style="color: var(--primary); font-size: 0.9rem;">Continue Shopping</a>
+      <div class="row"><span>Subtotal</span><span>&euro;<%= subtotal.toFixed(2) %></span></div>
+      <div class="row"><span>Delivery</span><span><%= shippingFree ? 'FREE' : '&euro;' + shippingCost.toFixed(2) %></span></div>
+      <div class="row total"><span>Total</span><span>&euro;<%= (subtotal + (shippingFree ? 0 : shippingCost)).toFixed(2) %></span></div>
+      <a href="/checkout" class="btn btn-primary btn-lg btn-block" style="margin-top: 10px;">Proceed to Checkout</a>
+      <div style="text-align: center; margin-top: 6px;">
+        <a href="/products" style="color: var(--link); font-size: 13px;">Continue Shopping</a>
       </div>
     </div>
   <% } %>

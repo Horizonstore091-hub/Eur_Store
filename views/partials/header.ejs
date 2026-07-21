@@ -5,42 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><%= typeof title !== 'undefined' ? title + ' - ' : '' %><%= locals.siteName %></title>
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>❄️</text></svg>">
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-<div class="top-bar">
+<div class="top-banner">
   <div class="container">
-    <span>❄️ Free shipping across Europe on orders over €99</span>
-    <div>
-      <a href="/auth/account">My Account</a>
-      <% if (user) { %>
-        <a href="/auth/logout">Logout</a>
-      <% } else { %>
-        <a href="/auth/login">Login</a>
-      <% } %>
-    </div>
+    Free shipping across Europe on orders over &euro;99 &mdash; <a href="/products">Shop now</a>
   </div>
 </div>
 <header>
-  <div class="container header-inner">
-    <a href="/" class="logo">❄️ Euro<span>Cool</span></a>
-    <nav>
-      <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a>
-      <a href="/products" class="<%= currentPath.startsWith('/products') ? 'active' : '' %>">Products</a>
-      <% (typeof categories !== 'undefined' ? categories : []).forEach(c => { %>
-        <a href="/products?category=<%= c.slug %>"><%= c.name %></a>
-      <% }); %>
-    </nav>
-    <div class="header-actions">
-      <form action="/search" method="GET" class="search-form">
-        <input type="text" name="q" placeholder="Search..." required>
-        <button type="submit">Search</button>
-      </form>
-      <a href="/cart">
-        Cart
-        <% if (locals.cartCount > 0) { %><span class="cart-badge"><%= cartCount %></span><% } %>
+  <div class="container header-main">
+    <a href="/" class="logo">Euro<span class="dot">Cool</span></a>
+    <form action="/search" method="GET" class="header-search">
+      <input type="text" name="q" placeholder="Search cooling products..." required>
+      <button type="submit">Search</button>
+    </form>
+    <div class="header-links">
+      <% if (user) { %>
+        <a href="/auth/account"><span>Hello, <%= user.first_name %></span><strong>Account</strong></a>
+        <a href="/auth/logout"><span>&nbsp;</span><strong>Logout</strong></a>
+      <% } else { %>
+        <a href="/auth/login"><span>Hello, Sign in</span><strong>Account</strong></a>
+      <% } %>
+      <a href="/cart" class="cart-link">
+        <span>&nbsp;</span><strong>Cart</strong>
+        <% if (locals.cartCount > 0) { %><span class="count"><%= cartCount %></span><% } %>
       </a>
     </div>
   </div>
 </header>
+<nav>
+  <div class="container">
+    <a href="/" class="<%= currentPath === '/' ? 'active' : '' %>">Home</a>
+    <a href="/products" class="<%= currentPath.startsWith('/products') ? 'active' : '' %>">All Products</a>
+    <% (typeof categories !== 'undefined' ? categories : []).slice(0, 8).forEach(c => { %>
+      <a href="/products?category=<%= c.slug %>" class="<%= currentPath.includes(c.slug) ? 'active' : '' %>"><%= c.name %></a>
+    <% }); %>
+  </div>
+</nav>
 <main>

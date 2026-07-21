@@ -1,7 +1,7 @@
 <%- include('../partials/admin-header') %>
 <div class="admin-header">
   <h1><%= product ? 'Edit' : 'Add' %> Product</h1>
-  <a href="/admin/products" class="btn btn-outline">← Back</a>
+  <a href="/admin/products" class="btn btn-secondary">← Back</a>
 </div>
 <form action="/admin/products/<%= product ? 'edit/' + product.id : 'new' %>" method="POST" class="admin-form">
   <div class="row-2">

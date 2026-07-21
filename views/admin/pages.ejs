@@ -14,7 +14,7 @@
         <td><span class="badge <%= p.is_active ? 'badge-paid' : 'badge-cancelled' %>"><%= p.is_active ? 'Active' : 'Inactive' %></span></td>
         <td style="font-size: 0.8rem;"><%= new Date(p.updated_at || p.created_at).toLocaleDateString() %></td>
         <td>
-          <a href="/admin/pages/edit/<%= p.id %>" class="btn btn-sm btn-outline">Edit</a>
+          <a href="/admin/pages/edit/<%= p.id %>" class="btn btn-sm btn-secondary">Edit</a>
           <form action="/admin/pages/delete/<%= p.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Delete this page?')">
             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
           </form>

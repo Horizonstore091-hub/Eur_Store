@@ -35,7 +35,7 @@ initialize().then(async () => {
 
   const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
   if (!userCount || userCount.count === 0) {
-    console.log('🌱 Empty database detected — seeding...');
+    console.log('Empty database detected — seeding...');
     const seed = require('./seed');
     await seed();
     console.log('✅ Auto-seed complete');
@@ -74,7 +74,7 @@ initialize().then(async () => {
   });
 
   app.listen(PORT, '0.0.0.0', () => {
-    console.log(`❄️ EuroCool Shop running on http://0.0.0.0:${PORT}`);
+    console.log(`EuroCool Shop running on http://0.0.0.0:${PORT}`);
   });
 }).catch(err => {
   console.error('Failed to initialize database:', err);

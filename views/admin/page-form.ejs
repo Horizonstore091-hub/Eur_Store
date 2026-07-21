@@ -1,7 +1,7 @@
 <%- include('../partials/admin-header') %>
 <div class="admin-header">
   <h1><%= page ? 'Edit' : 'New' %> Page</h1>
-  <a href="/admin/pages" class="btn btn-outline">← Back</a>
+  <a href="/admin/pages" class="btn btn-secondary">← Back</a>
 </div>
 <form action="/admin/pages/<%= page ? 'edit/' + page.id : 'new' %>" method="POST" class="admin-form">
   <div class="form-group">

@@ -1,9 +1,9 @@
 <%- include('partials/header') %>
 <section class="hero">
   <div class="container">
-    <h1>Stay Cool. Save Energy. 🧊</h1>
-    <p>Premium cooling solutions for European homes and offices. Energy-efficient products to beat the rising temperatures.</p>
-    <a href="/products" class="btn">Shop Now</a>
+    <h1>Stay cool, save energy.</h1>
+    <p>Premium cooling solutions for European homes and offices. Energy-efficient products rated A++ to A+++, CE certified, and built for the European climate.</p>
+    <a href="/products" class="btn btn-prime">Shop the collection</a>
   </div>
 </section>
 
@@ -16,47 +16,47 @@
     <div class="category-grid">
       <% categories.forEach(c => { %>
         <a href="/products?category=<%= c.slug %>" class="category-card">
-          <div class="icon"><%= c.slug === 'air-conditioners' ? '❄️' : c.slug === 'fans' ? '🌀' : c.slug === 'evaporative-coolers' ? '💨' : c.slug === 'smart-home' ? '📱' : c.slug === 'accessories' ? '🔧' : '🌬️' %></div>
+          <div class="icon"><%= c.slug === 'air-conditioners' ? '&#10052;' : c.slug === 'tower-fans' ? '&#9768;' : c.slug === 'pedestal-fans' ? '&#9786;' : c.slug === 'desk-fans' ? '&#9729;' : c.slug === 'evaporative-coolers' ? '&#9827;' : c.slug === 'ceiling-fans' ? '&#9788;' : c.slug === 'smart-cooling' ? '&#9881;' : c.slug === 'accessories' ? '&#9881;' : '&#9733;' %></div>
           <h3><%= c.name %></h3>
-          <p><%= c.description ? c.description.substring(0, 60) : 'Cooling solutions' %></p>
+          <p><%= c.description ? c.description.substring(0, 55) : 'Cooling solutions' %></p>
         </a>
       <% }); %>
     </div>
   </div>
 </section>
 
-<section class="section" style="background: var(--gray-50);">
+<section class="section">
   <div class="container">
     <div class="section-title">
       <h2>Featured Products</h2>
-      <p>Our top picks for beating the European heat</p>
+      <p>Top-rated cooling solutions for the European summer</p>
     </div>
     <div class="product-grid">
       <% featured.forEach(p => { %>
-        <div class="product-card" style="position: relative;">
+        <div class="product-card">
           <% if (p.compare_price && p.compare_price > p.price) { %><span class="badge">-<%= Math.round((1 - p.price/p.compare_price) * 100) %>%</span><% } %>
           <a href="/products/<%= p.slug %>" class="image">
-            <img src="<%= p.image || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%23e5e7eb%22 width=%22200%22 height=%22200%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2240%22>❄️</text></svg>' %>" alt="<%= p.name %>">
+            <img src="<%= p.image || '/images/placeholder.svg' %>" alt="<%= p.name %>">
           </a>
-          <div class="info">
-            <div class="category"><%= p.category_name || 'Cooling' %></div>
-            <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
-            <div class="price">
-              €<%= p.price.toFixed(2) %>
-              <% if (p.compare_price && p.compare_price > p.price) { %><span class="compare-price">€<%= p.compare_price.toFixed(2) %></span><% } %>
-            </div>
-            <% if (p.energy_rating) { %><span class="energy-badge"><%= p.energy_rating %></span><% } %>
-            <form action="/cart/add" method="POST">
-              <input type="hidden" name="product_id" value="<%= p.id %>">
-              <input type="hidden" name="quantity" value="1">
-              <button type="submit" class="btn btn-primary btn-sm add-to-cart">Add to Cart</button>
-            </form>
+          <div class="category"><%= p.category_name || 'Cooling' %></div>
+          <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
+          <div class="rating">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+          <div class="price">
+            <span class="symbol">&euro;</span><%= Math.floor(p.price) %><span class="cents">.<%= (p.price % 1).toFixed(2).slice(2) %></span>
+            <% if (p.compare_price && p.compare_price > p.price) { %><span class="compare-price">&euro;<%= p.compare_price.toFixed(2) %></span><span class="badge-save">Save &euro;<%= (p.compare_price - p.price).toFixed(2) %></span><% } %>
           </div>
+          <% if (p.energy_rating) { %><span class="energy-badge"><%= p.energy_rating %></span><% } %>
+          <div class="free-ship">FREE delivery</div>
+          <form action="/cart/add" method="POST" class="add-to-cart">
+            <input type="hidden" name="product_id" value="<%= p.id %>">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn btn-primary btn-block">Add to Cart</button>
+          </form>
         </div>
       <% }); %>
     </div>
-    <div style="text-align: center; margin-top: 2rem;">
-      <a href="/products" class="btn btn-outline btn-lg">View All Products →</a>
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="/products" class="btn btn-secondary btn-lg">View all products</a>
     </div>
   </div>
 </section>
@@ -69,36 +69,37 @@
     </div>
     <div class="product-grid">
       <% bestsellers.forEach(p => { %>
-        <div class="product-card" style="position: relative;">
+        <div class="product-card">
           <a href="/products/<%= p.slug %>" class="image">
-            <img src="<%= p.image || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%23e5e7eb%22 width=%22200%22 height=%22200%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2240%22>❄️</text></svg>' %>" alt="<%= p.name %>">
+            <img src="<%= p.image || '/images/placeholder.svg' %>" alt="<%= p.name %>">
           </a>
-          <div class="info">
-            <div class="category"><%= p.category_name || 'Cooling' %></div>
-            <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
-            <div class="price">€<%= p.price.toFixed(2) %></div>
-            <form action="/cart/add" method="POST">
-              <input type="hidden" name="product_id" value="<%= p.id %>">
-              <input type="hidden" name="quantity" value="1">
-              <button type="submit" class="btn btn-primary btn-sm add-to-cart">Add to Cart</button>
-            </form>
+          <div class="category"><%= p.category_name || 'Cooling' %></div>
+          <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
+          <div class="price">
+            <span class="symbol">&euro;</span><%= Math.floor(p.price) %><span class="cents">.<%= (p.price % 1).toFixed(2).slice(2) %></span>
           </div>
+          <div class="free-ship">FREE delivery</div>
+          <form action="/cart/add" method="POST" class="add-to-cart">
+            <input type="hidden" name="product_id" value="<%= p.id %>">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn btn-primary btn-block">Add to Cart</button>
+          </form>
         </div>
       <% }); %>
     </div>
   </div>
 </section>
 
-<section style="background: linear-gradient(135deg, #1a73e8, #34a853); color: white; padding: 3rem 0; text-align: center;">
+<section style="background: var(--primary-light); color: #fff; padding: 30px 0; text-align: center;">
   <div class="container">
-    <h2 style="font-size: 1.8rem; margin-bottom: 1rem;">🌍 Made for the European Climate</h2>
-    <p style="max-width: 700px; margin: 0 auto 1.5rem; opacity: 0.9;">All our products meet EU energy efficiency standards, are CE certified, and are designed specifically for European electrical systems (220-240V, 50Hz).</p>
-    <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
-      <div>✅ CE Certified</div>
-      <div>✅ Energy Class A+++</div>
-      <div>✅ EU Standards</div>
-      <div>✅ 2-Year Warranty</div>
-      <div>✅ Free Shipping Europe</div>
+    <h2 style="font-size: 1.5rem; margin-bottom: 10px; font-weight: 400;">Made for the European Climate</h2>
+    <p style="max-width: 700px; margin: 0 auto 16px; opacity: 0.85; font-size: 14px;">All our products meet EU energy efficiency standards, are CE certified, and designed for European electrical systems (220-240V, 50Hz).</p>
+    <div class="trust-badges">
+      <span>CE Certified</span>
+      <span>Energy Class A+++</span>
+      <span>EU Standards</span>
+      <span>2-Year Warranty</span>
+      <span>Free Shipping EU</span>
     </div>
   </div>
 </section>

@@ -8,7 +8,7 @@
   <form method="GET" style="display: flex; gap: 0.5rem;">
     <input type="text" name="search" placeholder="Search by name or SKU..." value="<%= search %>" style="padding: 0.5rem; border: 1px solid var(--gray-300); border-radius: 6px; flex: 1;">
     <button type="submit" class="btn btn-primary">Search</button>
-    <% if (search) { %><a href="/admin/products" class="btn btn-outline">Clear</a><% } %>
+    <% if (search) { %><a href="/admin/products" class="btn btn-secondary">Clear</a><% } %>
   </form>
 </div>
 <table class="admin-table">
@@ -26,7 +26,7 @@
         <td><%= p.total_sold || 0 %></td>
         <td><span class="badge <%= p.is_active ? 'badge-paid' : 'badge-cancelled' %>"><%= p.is_active ? 'Active' : 'Inactive' %></span></td>
         <td>
-          <a href="/admin/products/edit/<%= p.id %>" class="btn btn-sm btn-outline">Edit</a>
+          <a href="/admin/products/edit/<%= p.id %>" class="btn btn-sm btn-secondary">Edit</a>
           <form action="/admin/products/delete/<%= p.id %>" method="POST" style="display: inline;" onsubmit="return confirm('Delete this product?')">
             <button type="submit" class="btn btn-sm btn-danger">Delete</button>
           </form>

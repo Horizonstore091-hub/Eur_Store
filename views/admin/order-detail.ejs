@@ -1,7 +1,7 @@
 <%- include('../partials/admin-header') %>
 <div class="admin-header">
   <h1>Order #<%= order.order_number %></h1>
-  <a href="/admin/orders" class="btn btn-outline">← Back to Orders</a>
+  <a href="/admin/orders" class="btn btn-secondary">← Back to Orders</a>
 </div>
 <% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">

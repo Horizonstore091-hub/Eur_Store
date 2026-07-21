@@ -1,19 +1,19 @@
 <%- include('../partials/header') %>
-<section class="section" style="padding: 2rem 0;">
+<section class="section" style="padding: 15px 0;">
   <div class="container">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
       <div>
-        <h1 style="font-size: 1.5rem;">
+        <h1 style="font-size: 1.3rem; font-weight: 400;">
           <% if (selectedCategory) { %>
             <% const cat = categories.find(c => c.slug === selectedCategory); %>
             <%= cat ? cat.name : 'Products' %>
           <% } else { %>All Cooling Products<% } %>
         </h1>
-        <p style="color: var(--gray-500); font-size: 0.9rem;"><%= total %> product<%= total !== 1 ? 's' : '' %> found</p>
+        <p style="color: var(--text-secondary); font-size: 13px;"><%= total %> product<%= total !== 1 ? 's' : '' %></p>
       </div>
-      <div style="display: flex; gap: 0.5rem; align-items: center;">
-        <% if (selectedCategory) { %><a href="/products" class="btn btn-sm btn-outline">Clear filters</a><% } %>
-        <select onchange="window.location.href=this.value" style="padding: 0.4rem; border: 1px solid var(--gray-300); border-radius: 4px;">
+      <div style="display: flex; gap: 6px; align-items: center;">
+        <% if (selectedCategory) { %><a href="/products" class="btn btn-sm btn-secondary">Clear filters</a><% } %>
+        <select onchange="window.location.href=this.value" style="padding: 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px;">
           <option value="?sort=newest<%= selectedCategory ? '&category=' + selectedCategory : '' %>" <%= sort === 'newest' ? 'selected' : '' %>>Newest</option>
           <option value="?sort=price_asc<%= selectedCategory ? '&category=' + selectedCategory : '' %>" <%= sort === 'price_asc' ? 'selected' : '' %>>Price: Low to High</option>
           <option value="?sort=price_desc<%= selectedCategory ? '&category=' + selectedCategory : '' %>" <%= sort === 'price_desc' ? 'selected' : '' %>>Price: High to Low</option>
@@ -22,57 +22,53 @@
       </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 220px 1fr; gap: 2rem;">
-      <aside>
-        <div style="background: white; border: 1px solid var(--gray-200); border-radius: 10px; padding: 1.5rem;">
-          <h3 style="font-size: 1rem; margin-bottom: 1rem;">Categories</h3>
-          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-            <a href="/products" style="text-decoration: none; color: var(--gray-600); font-size: 0.9rem; padding: 0.3rem 0; <%= !selectedCategory ? 'font-weight: 600; color: var(--primary);' : '' %>">All Products</a>
-            <% categories.forEach(c => { %>
-              <a href="/products?category=<%= c.slug %>" style="text-decoration: none; color: var(--gray-600); font-size: 0.9rem; padding: 0.3rem 0; <%= selectedCategory === c.slug ? 'font-weight: 600; color: var(--primary);' : '' %>"><%= c.name %></a>
-            <% }); %>
-          </div>
-
-          <h3 style="font-size: 1rem; margin: 1.5rem 0 0.5rem;">Energy Rating</h3>
-          <div style="display: flex; flex-direction: column; gap: 0.3rem;">
-            <% ['A+++', 'A++', 'A+', 'A', 'B'].forEach(r => { %>
-              <label style="font-size: 0.85rem; display: flex; align-items: center; gap: 0.3rem;">
-                <input type="checkbox" onchange="applyFilter()" class="energy-filter" value="<%= r %>" <%= energyRating && energyRating.includes(r) ? 'checked' : '' %>> <%= r %>
-              </label>
-            <% }); %>
-          </div>
+    <div style="display: grid; grid-template-columns: 220px 1fr; gap: 20px;">
+      <aside class="filter-sidebar">
+        <div class="filter-group">
+          <h3>Categories</h3>
+          <a href="/products" class="<%= !selectedCategory ? 'active' : '' %>">All Products</a>
+          <% categories.forEach(c => { %>
+            <a href="/products?category=<%= c.slug %>" class="<%= selectedCategory === c.slug ? 'active' : '' %>"><%= c.name %></a>
+          <% }); %>
+        </div>
+        <div class="filter-group">
+          <h3>Energy Rating</h3>
+          <% ['A+++', 'A++', 'A+', 'A', 'B'].forEach(r => { %>
+            <label style="font-size: 13px; display: flex; align-items: center; gap: 6px; padding: 2px 0;">
+              <input type="checkbox" onchange="applyFilter()" class="energy-filter" value="<%= r %>" <%= energyRating && energyRating.includes(r) ? 'checked' : '' %>> <%= r %>
+            </label>
+          <% }); %>
         </div>
       </aside>
 
       <div>
         <% if (products.length === 0) { %>
-          <div style="text-align: center; padding: 3rem; color: var(--gray-500);">
-            <p style="font-size: 3rem; margin-bottom: 1rem;">🌀</p>
+          <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
             <h3>No products found</h3>
-            <p>Try adjusting your filters or search terms.</p>
+            <p style="margin: 6px 0 12px;">Try adjusting your filters or search terms.</p>
+            <a href="/products" class="btn btn-secondary">Clear all filters</a>
           </div>
         <% } else { %>
           <div class="product-grid">
             <% products.forEach(p => { %>
-              <div class="product-card" style="position: relative;">
+              <div class="product-card">
                 <% if (p.compare_price && p.compare_price > p.price) { %><span class="badge">-<%= Math.round((1 - p.price/p.compare_price) * 100) %>%</span><% } %>
                 <a href="/products/<%= p.slug %>" class="image">
-                  <img src="<%= p.image || 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 200 200%22><rect fill=%22%23e5e7eb%22 width=%22200%22 height=%22200%22/><text x=%2250%%22 y=%2250%%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2240%22>❄️</text></svg>' %>" alt="<%= p.name %>">
+                  <img src="<%= p.image || '/images/placeholder.svg' %>" alt="<%= p.name %>">
                 </a>
-                <div class="info">
-                  <div class="category"><%= p.category_name || 'Cooling' %></div>
-                  <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
-                  <div class="price">
-                    €<%= p.price.toFixed(2) %>
-                    <% if (p.compare_price && p.compare_price > p.price) { %><span class="compare-price">€<%= p.compare_price.toFixed(2) %></span><% } %>
-                  </div>
-                  <% if (p.energy_rating) { %><span class="energy-badge"><%= p.energy_rating %></span><% } %>
-                  <form action="/cart/add" method="POST">
-                    <input type="hidden" name="product_id" value="<%= p.id %>">
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="btn btn-primary btn-sm add-to-cart">Add to Cart</button>
-                  </form>
+                <div class="category"><%= p.category_name || 'Cooling' %></div>
+                <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
+                <div class="price">
+                  <span class="symbol">&euro;</span><%= Math.floor(p.price) %><span class="cents">.<%= (p.price % 1).toFixed(2).slice(2) %></span>
+                  <% if (p.compare_price && p.compare_price > p.price) { %><span class="compare-price">&euro;<%= p.compare_price.toFixed(2) %></span><% } %>
                 </div>
+                <% if (p.energy_rating) { %><span class="energy-badge"><%= p.energy_rating %></span><% } %>
+                <div class="free-ship">FREE delivery</div>
+                <form action="/cart/add" method="POST" class="add-to-cart">
+                  <input type="hidden" name="product_id" value="<%= p.id %>">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="btn btn-primary btn-block">Add to Cart</button>
+                </form>
               </div>
             <% }); %>
           </div>

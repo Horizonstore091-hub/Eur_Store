@@ -1,42 +1,53 @@
 <%- include('../partials/header') %>
-<section class="container" style="padding: 3rem 0; text-align: center;">
-  <div style="max-width: 600px; margin: 0 auto;">
-    <p style="font-size: 4rem; margin-bottom: 1rem;">✅</p>
-    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Order Confirmed!</h1>
-    <p style="color: var(--gray-500); margin-bottom: 2rem;">Thank you for your order. We'll send you a confirmation email shortly.</p>
-    <div style="background: var(--gray-50); border-radius: 10px; padding: 2rem; text-align: left;">
-      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-        <span style="color: var(--gray-500);">Order Number</span>
+<section class="container" style="padding: 30px 0;">
+  <div class="confirmation-box">
+    <div class="check">&#10003;</div>
+    <h1>Order Confirmed</h1>
+    <p style="color: var(--text-secondary); margin-bottom: 20px;">Thank you for your order. You will receive a confirmation email shortly.</p>
+    <div style="background: var(--bg-light); border-radius: 4px; padding: 20px; text-align: left;">
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span style="color: var(--text-secondary); font-size: 13px;">Order Number</span>
         <strong><%= order.order_number %></strong>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-        <span style="color: var(--gray-500);">Date</span>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span style="color: var(--text-secondary); font-size: 13px;">Date</span>
         <strong><%= new Date(order.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) %></strong>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-        <span style="color: var(--gray-500);">Status</span>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span style="color: var(--text-secondary); font-size: 13px;">Status</span>
         <span class="badge badge-confirmed">Confirmed</span>
       </div>
-      <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-        <span style="color: var(--gray-500);">Payment</span>
-        <span><%= order.payment_method === 'stripe' ? 'Credit Card' : order.payment_method === 'paypal' ? 'PayPal' : order.payment_method === 'bank_transfer' ? 'Bank Transfer' : 'Cash on Delivery' %></span>
+      <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+        <span style="color: var(--text-secondary); font-size: 13px;">Payment</span>
+        <span><%= order.payment_method === 'crypto_btc' ? 'Bitcoin (BTC)' : order.payment_method === 'crypto_eth' ? 'Ethereum (ETH)' : order.payment_method === 'crypto_usdt' ? 'Tether (USDT)' : order.payment_method === 'crypto_usdc' ? 'USD Coin (USDC)' : order.payment_method === 'gift_steam' ? 'Steam Gift Card' : order.payment_method === 'gift_razer' ? 'Razer Gold' : order.payment_method === 'gift_apple' ? 'Apple Gift Card' : order.payment_method %></span>
       </div>
-      <hr style="border: none; border-top: 1px solid var(--gray-200); margin: 1rem 0;">
-      <h3 style="margin-bottom: 0.5rem;">Items Ordered</h3>
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 12px 0;">
+      <h4 style="font-size: 14px; margin-bottom: 8px;">Items Ordered</h4>
       <% items.forEach(item => { %>
-        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; padding: 0.3rem 0;">
-          <span><%= item.product_name %> × <%= item.quantity %></span>
-          <span>€<%= item.total.toFixed(2) %></span>
+        <div style="display: flex; justify-content: space-between; font-size: 13px; padding: 3px 0;">
+          <span><%= item.product_name %> x <%= item.quantity %></span>
+          <span>&euro;<%= item.total.toFixed(2) %></span>
         </div>
       <% }); %>
-      <hr style="border: none; border-top: 1px solid var(--gray-200); margin: 1rem 0;">
+      <hr style="border: none; border-top: 1px solid var(--border); margin: 12px 0;">
       <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 1.1rem;">
         <span>Total Paid</span>
-        <span>€<%= order.total.toFixed(2) %></span>
+        <span>&euro;<%= order.total.toFixed(2) %></span>
       </div>
     </div>
-    <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
-      <a href="/auth/account" class="btn btn-outline">View My Orders</a>
+
+    <% if (order.payment_method && order.payment_method.startsWith('crypto')) { %>
+    <div class="alert alert-info" style="margin-top: 16px; text-align: left;">
+      <strong>Payment Instructions:</strong> Please send the exact amount in <%= order.payment_method === 'crypto_btc' ? 'Bitcoin' : order.payment_method === 'crypto_eth' ? 'Ethereum' : order.payment_method === 'crypto_usdt' ? 'USDT' : 'USDC' %> to the wallet address provided in your confirmation email. Your order will be processed once payment is confirmed on the blockchain.
+    </div>
+    <% } else if (order.payment_method && order.payment_method.startsWith('gift')) { %>
+    <div class="alert alert-info" style="margin-top: 16px; text-align: left;">
+      <strong>Gift Card Instructions:</strong> Please reply to your confirmation email with your gift card code. Our team will verify the balance and process your order within 24 hours.
+    </div>
+    <% } %>
+
+    <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+      <a href="/auth/account" class="btn btn-secondary">View My Orders</a>
       <a href="/products" class="btn btn-primary">Continue Shopping</a>
     </div>
   </div>

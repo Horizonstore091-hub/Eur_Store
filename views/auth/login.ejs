@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
 <div class="container">
   <div class="auth-page">
-    <h1>Welcome Back</h1>
+    <h1>Sign In</h1>
     <% if (typeof error !== 'undefined' && error) { %><div class="error"><%= error %></div><% } %>
     <form action="/auth/login" method="POST">
       <input type="hidden" name="redirect" value="<%= typeof redirect !== 'undefined' ? redirect : '/' %>">
@@ -11,12 +11,12 @@
       </div>
       <div class="form-group">
         <label>Password</label>
-        <input type="password" name="password" required placeholder="••••••••">
+        <input type="password" name="password" required placeholder="Enter your password">
       </div>
       <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
     </form>
     <div class="alt-link">
-      Don't have an account? <a href="/auth/register">Create one</a>
+      Don't have an account? <a href="/auth/register">Create your account</a>
     </div>
   </div>
 </div>
