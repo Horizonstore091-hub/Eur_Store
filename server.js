@@ -30,8 +30,16 @@ app.use((req, res, next) => {
   next();
 });
 
-initialize().then(() => {
+initialize().then(async () => {
   const { db } = require('./database');
+
+  const userCount = db.prepare('SELECT COUNT(*) as count FROM users').get();
+  if (!userCount || userCount.count === 0) {
+    console.log('🌱 Empty database detected — seeding...');
+    const seed = require('./seed');
+    await seed();
+    console.log('✅ Auto-seed complete');
+  }
 
   app.use((req, res, next) => {
     try {
@@ -65,8 +73,8 @@ initialize().then(() => {
     res.status(500).render('500', { title: 'Server Error' });
   });
 
-  app.listen(PORT, () => {
-    console.log(`❄️ EuroCool Shop running on http://localhost:${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`❄️ EuroCool Shop running on http://0.0.0.0:${PORT}`);
   });
 }).catch(err => {
   console.error('Failed to initialize database:', err);

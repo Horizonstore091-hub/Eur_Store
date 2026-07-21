@@ -180,9 +180,13 @@ async function seed() {
   console.log('   - About page created');
 }
 
-seed().then(() => {
-  console.log('\n🚀 Run "npm start" to launch the shop!');
-}).catch(err => {
-  console.error('Seed failed:', err);
-  process.exit(1);
-});
+if (require.main === module) {
+  seed().then(() => {
+    console.log('\n🚀 Run "npm start" to launch the shop!');
+  }).catch(err => {
+    console.error('Seed failed:', err);
+    process.exit(1);
+  });
+}
+
+module.exports = seed;

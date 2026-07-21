@@ -1,0 +1,8 @@
+[providers]
+node = true
+
+[phases.setup]
+nixPkgs = ["nodejs", "nodePackages.pnpm"]
+
+[phases.install]
+cmds = ["npm install"]
