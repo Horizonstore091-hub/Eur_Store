@@ -7,8 +7,14 @@ let db = null;
 let ready = false;
 let inTransaction = false;
 
+function ensureDataDir() {
+  const dir = path.dirname(dbPath);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+}
+
 function saveDb() {
   if (db && !inTransaction) {
+    ensureDataDir();
     const data = db.export();
     fs.writeFileSync(dbPath, Buffer.from(data));
   }
@@ -70,6 +76,7 @@ function initialize() {
   return new Promise((resolve, reject) => {
     if (ready) return resolve();
     initSqlJs().then(SQL => {
+      ensureDataDir();
       if (fs.existsSync(dbPath)) {
         db = new SQL.Database(fs.readFileSync(dbPath));
       } else {
