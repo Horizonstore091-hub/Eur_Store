@@ -333,15 +333,27 @@ router.post('/payments/update/:id', (req, res) => {
 });
 
 router.get('/settings', (req, res) => {
-  const settings = db.getAllSettings();
-  res.render('admin/settings', { title: 'Settings', settings });
+  try {
+    const settings = db.getAllSettings();
+    res.render('admin/settings', { title: 'Settings', settings });
+  } catch (e) {
+    console.error('Settings load error:', e);
+    res.status(500).send('Failed to load settings: ' + e.message);
+  }
 });
 
 router.post('/settings', (req, res) => {
-  for (const [key, value] of Object.entries(req.body)) {
-    updateSetting(key, value);
+  try {
+    for (const [key, value] of Object.entries(req.body)) {
+      if (typeof value === 'string' || typeof value === 'number') {
+        updateSetting(key, String(value));
+      }
+    }
+    res.redirect('/admin/settings?success=Settings saved');
+  } catch (e) {
+    console.error('Settings save error:', e);
+    res.redirect('/admin/settings?error=Failed to save: ' + encodeURIComponent(e.message));
   }
-  res.redirect('/admin/settings?success=Settings saved');
 });
 
 router.get('/reviews', (req, res) => {

@@ -3,11 +3,12 @@
   <h1>Settings</h1>
 </div>
 <% if (typeof success !== 'undefined') { %><div class="alert alert-success"><%= success %></div><% } %>
+<% if (typeof error !== 'undefined') { %><div class="alert alert-error"><%= error %></div><% } %>
 <form action="/admin/settings" method="POST" class="admin-form">
   <h3 style="margin-bottom: 1rem;">General</h3>
   <div class="form-group">
     <label>Site Name</label>
-    <input type="text" name="site_name" value="<%= settings.site_name || '' %>">
+    <input type="text" name="site_name" value="<%= settings.site_name || 'EuroCool Shop' %>">
   </div>
   <div class="form-group">
     <label>Site Description</label>
@@ -16,11 +17,11 @@
   <h3 style="margin: 1.5rem 0 1rem;">Shipping</h3>
   <div class="row-3">
     <div class="form-group">
-      <label>Shipping Cost (€)</label>
+      <label>Shipping Cost (EUR)</label>
       <input type="number" step="0.01" name="shipping_europe" value="<%= settings.shipping_europe || '9.99' %>">
     </div>
     <div class="form-group">
-      <label>Free Shipping Threshold (€)</label>
+      <label>Free Shipping Threshold (EUR)</label>
       <input type="number" step="0.01" name="shipping_free_threshold" value="<%= settings.shipping_free_threshold || '99' %>">
     </div>
     <div class="form-group">
@@ -49,7 +50,7 @@
   </div>
   <h3 style="margin: 1.5rem 0 1rem;">Payments</h3>
   <div class="form-group">
-    <label>Stripe Secret Key</label>
+    <label>Stripe Key (legacy)</label>
     <input type="password" name="stripe_key" value="<%= settings.stripe_key || '' %>">
   </div>
   <button type="submit" class="btn btn-primary btn-lg">Save Settings</button>
