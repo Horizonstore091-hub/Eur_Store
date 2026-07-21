@@ -36,13 +36,13 @@
       </div>
     </div>
 
-    <% if (order.payment_method && order.payment_method.startsWith('crypto')) { %>
-    <div class="alert alert-info" style="margin-top: 16px; text-align: left;">
-      <strong>Payment Instructions:</strong> Please send the exact amount in <%= order.payment_method === 'crypto_btc' ? 'Bitcoin' : order.payment_method === 'crypto_eth' ? 'Ethereum' : order.payment_method === 'crypto_usdt' ? 'USDT' : 'USDC' %> to the wallet address provided in your confirmation email. Your order will be processed once payment is confirmed on the blockchain.
+    <% if (order.payment_status === 'paid') { %>
+    <div class="alert alert-success" style="margin-top: 16px; text-align: left;">
+      <strong>Payment received.</strong> Your order is being processed. We will notify you when it ships.
     </div>
-    <% } else if (order.payment_method && order.payment_method.startsWith('gift')) { %>
+    <% } else { %>
     <div class="alert alert-info" style="margin-top: 16px; text-align: left;">
-      <strong>Gift Card Instructions:</strong> Please reply to your confirmation email with your gift card code. Our team will verify the balance and process your order within 24 hours.
+      <strong>Payment pending.</strong> Please <a href="/checkout/payment/<%= order.order_number %>" style="font-weight: 700;">complete your payment here</a> to process your order.
     </div>
     <% } %>
 

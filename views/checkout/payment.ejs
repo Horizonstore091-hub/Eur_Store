@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+<section class="container" style="padding: 30px 0;">
+  <h1 style="font-size: 1.3rem; font-weight: 400; margin-bottom: 20px;">Complete Your Payment</h1>
+
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <div>
+      <% if (order.payment_method.startsWith('crypto')) { %>
+        <div style="background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 24px;">
+          <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">
+            Send <%= order.payment_method === 'crypto_btc' ? 'Bitcoin (BTC)' : order.payment_method === 'crypto_eth' ? 'Ethereum (ETH)' : order.payment_method === 'crypto_usdt' ? 'Tether (USDT)' : 'USD Coin (USDC)' %>
+          </h2>
+
+          <div style="background: var(--bg-light); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 16px;">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Amount Due</div>
+            <div style="font-size: 24px; font-weight: 700;">&euro;<%= order.total.toFixed(2) %></div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Order Reference</div>
+            <div style="font-size: 14px; font-weight: 600;">#<%= order.order_number %></div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 6px;">Send to Wallet Address</div>
+            <div style="background: var(--bg-light); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-size: 12px; font-family: monospace; word-break: break-all; user-select: all;">
+              <%= order.payment_method === 'crypto_btc' ? cryptoAddresses.btc : cryptoAddresses.eth %>
+            </div>
+            <button onclick="navigator.clipboard.writeText(this.previousElementSibling.textContent); this.textContent='Copied!'; setTimeout(()=>this.textContent='Copy Address', 2000)" style="margin-top: 6px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 4px; background: #fff; cursor: pointer; font-size: 12px;">Copy Address</button>
+          </div>
+
+          <div style="background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px; padding: 12px; font-size: 12px; color: #8d6e00; margin-bottom: 16px;">
+            Send the exact amount shown above. Your order will be processed once the transaction is confirmed on the blockchain (typically 10-30 minutes). Do not send from an exchange wallet without memo/tag support.
+          </div>
+
+          <form action="/checkout/payment/<%= order.order_number %>/confirm" method="POST">
+            <div class="form-group">
+              <label>Transaction ID (TXID)</label>
+              <input type="text" name="txid" placeholder="Paste your transaction hash here" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px;" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top: 8px;">I Have Sent the Payment</button>
+          </form>
+        </div>
+      <% } else if (order.payment_method.startsWith('gift')) { %>
+        <div style="background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 24px;">
+          <h2 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">
+            Pay with <%= order.payment_method === 'gift_steam' ? 'Steam Gift Card' : order.payment_method === 'gift_razer' ? 'Razer Gold' : 'Apple Gift Card' %>
+          </h2>
+
+          <div style="background: var(--bg-light); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 16px;">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Amount Due</div>
+            <div style="font-size: 24px; font-weight: 700;">&euro;<%= order.total.toFixed(2) %></div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 4px;">Order Reference</div>
+            <div style="font-size: 14px; font-weight: 600;">#<%= order.order_number %></div>
+          </div>
+
+          <div style="background: #e3f2fd; border: 1px solid #90caf9; border-radius: 6px; padding: 12px; font-size: 12px; color: #0d47a1; margin-bottom: 16px;">
+            Enter the gift card code below. The card balance must cover the total amount. Your order will be processed within 24 hours after code verification.
+          </div>
+
+          <form action="/checkout/payment/<%= order.order_number %>/confirm" method="POST">
+            <div class="form-group">
+              <label>Gift Card Code</label>
+              <input type="text" name="gift_code" placeholder="Enter your <%= order.payment_method === 'gift_steam' ? 'Steam' : order.payment_method === 'gift_razer' ? 'Razer Gold' : 'Apple' %> gift card code" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; text-transform: uppercase;" required>
+            </div>
+            <div class="form-group">
+              <label>Card PIN (if applicable)</label>
+              <input type="text" name="gift_pin" placeholder="PIN code (optional)" style="width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px;">
+            </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top: 8px;">Submit Gift Card Code</button>
+          </form>
+        </div>
+      <% } %>
+    </div>
+
+    <div>
+      <div style="background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 20px; position: sticky; top: 10px;">
+        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px;">Order Summary</h3>
+        <% items.forEach(item => { %>
+          <div style="display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px;">
+            <span><%= item.product_name %> x <%= item.quantity %></span>
+            <span>&euro;<%= item.total.toFixed(2) %></span>
+          </div>
+        <% }); %>
+        <div style="display: flex; justify-content: space-between; border-top: 1px solid var(--border); margin-top: 8px; padding-top: 8px; font-size: 13px;">
+          <span>Subtotal</span><span>&euro;<%= order.subtotal.toFixed(2) %></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 13px;">
+          <span>Delivery</span><span>&euro;<%= order.shipping_cost ? order.shipping_cost.toFixed(2) : 'FREE' %></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 13px;">
+          <span>VAT</span><span>&euro;<%= order.tax.toFixed(2) %></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 18px; border-top: 2px solid var(--border); margin-top: 8px; padding-top: 8px;">
+          <span>Total</span><span>&euro;<%= order.total.toFixed(2) %></span>
+        </div>
+
+        <div style="margin-top: 16px; padding: 12px; background: var(--bg-light); border-radius: 6px; font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+          Need help? Contact us at hello@eurocool.shop<br>
+          Include your order reference #<%= order.order_number %><br>
+          Free returns within 30 days.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<%- include('../partials/footer') %>

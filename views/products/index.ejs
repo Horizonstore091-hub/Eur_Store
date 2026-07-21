@@ -63,7 +63,7 @@
                   <% if (p.compare_price && p.compare_price > p.price) { %><span class="compare-price">&euro;<%= p.compare_price.toFixed(2) %></span><% } %>
                 </div>
                 <% if (p.energy_rating) { %><span class="energy-badge"><%= p.energy_rating %></span><% } %>
-                <div class="free-ship">FREE delivery</div>
+                <div class="free-ship"><span class="icon-truck"></span> FREE delivery</div>
                 <form action="/cart/add" method="POST" class="add-to-cart">
                   <input type="hidden" name="product_id" value="<%= p.id %>">
                   <input type="hidden" name="quantity" value="1">

@@ -19,7 +19,7 @@
             <div class="category"><%= p.category_name || '' %></div>
             <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
             <div class="price">&euro;<%= p.price.toFixed(2) %></div>
-            <div class="free-ship">FREE delivery</div>
+            <div class="free-ship"><span class="icon-truck"></span> FREE delivery</div>
             <form action="/cart/add" method="POST" class="add-to-cart">
               <input type="hidden" name="product_id" value="<%= p.id %>">
               <input type="hidden" name="quantity" value="1">

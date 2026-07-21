@@ -45,24 +45,36 @@
             <select name="country" required>
               <option value="DE">Germany</option>
               <option value="AT">Austria</option>
-              <option value="CH">Switzerland</option>
-              <option value="FR">France</option>
-              <option value="IT">Italy</option>
-              <option value="ES">Spain</option>
-              <option value="NL">Netherlands</option>
               <option value="BE">Belgium</option>
-              <option value="DK">Denmark</option>
-              <option value="SE">Sweden</option>
-              <option value="NO">Norway</option>
-              <option value="FI">Finland</option>
-              <option value="PL">Poland</option>
+              <option value="BG">Bulgaria</option>
+              <option value="HR">Croatia</option>
+              <option value="CY">Cyprus</option>
               <option value="CZ">Czech Republic</option>
-              <option value="PT">Portugal</option>
-              <option value="IE">Ireland</option>
-              <option value="GB">United Kingdom</option>
+              <option value="DK">Denmark</option>
+              <option value="EE">Estonia</option>
+              <option value="FI">Finland</option>
+              <option value="FR">France</option>
               <option value="GR">Greece</option>
-              <option value="RO">Romania</option>
               <option value="HU">Hungary</option>
+              <option value="IS">Iceland</option>
+              <option value="IE">Ireland</option>
+              <option value="IT">Italy</option>
+              <option value="LV">Latvia</option>
+              <option value="LI">Liechtenstein</option>
+              <option value="LT">Lithuania</option>
+              <option value="LU">Luxembourg</option>
+              <option value="MT">Malta</option>
+              <option value="NL">Netherlands</option>
+              <option value="NO">Norway</option>
+              <option value="PL">Poland</option>
+              <option value="PT">Portugal</option>
+              <option value="RO">Romania</option>
+              <option value="SK">Slovakia</option>
+              <option value="SI">Slovenia</option>
+              <option value="ES">Spain</option>
+              <option value="SE">Sweden</option>
+              <option value="CH">Switzerland</option>
+              <option value="GB">United Kingdom</option>
             </select>
           </div>
 
@@ -121,11 +133,7 @@
             </label>
           </div>
 
-          <div style="margin: 12px 0;">
-            <label style="display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--text-secondary);">
-              <input type="checkbox" name="gift_card_code" placeholder="Gift card code (if applicable)" style="width: 100%; padding: 8px; border: 1px solid var(--border); border-radius: 4px;">
-            </label>
-          </div>
+          <p style="font-size: 12px; color: var(--text-secondary); margin: 8px 0;">After placing your order, you will receive payment instructions to complete your transfer.</p>
 
           <button type="submit" class="btn btn-primary btn-lg btn-block" style="margin-top: 12px;">Place Order &mdash; &euro;<%= total.toFixed(2) %></button>
         </form>
@@ -152,10 +160,9 @@
           <span>Total</span><span>&euro;<%= total.toFixed(2) %></span>
         </div>
         <div style="margin-top: 16px; padding: 12px; background: var(--bg-light); border-radius: 4px; font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
-          Secure checkout. We accept cryptocurrency and digital gift cards only.<br>
-          Your payment information is encrypted.<br>
-          Free returns within 30 days.<br>
-          Shipped from our EU warehouse.
+          <span class="icon-lock"></span> Secure checkout. We accept cryptocurrency and digital gift cards only.<br>
+          <span class="icon-check"></span> Free returns within 30 days.<br>
+          <span class="icon-truck"></span> Shipped from our EU warehouse.
         </div>
       </div>
     </div>

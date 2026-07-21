@@ -85,7 +85,41 @@ router.post('/place', requireAuth, (req, res) => {
   req.session.cart = [];
   req.session.lastOrder = orderNumber;
 
-  res.redirect(`/checkout/confirmation/${orderNumber}`);
+  res.redirect(`/checkout/payment/${orderNumber}`);
+});
+
+router.get('/payment/:orderNumber', requireAuth, (req, res) => {
+  const order = db.prepare('SELECT * FROM orders WHERE order_number = ? AND user_id = ?').get(req.params.orderNumber, req.session.user.id);
+  if (!order) return res.redirect('/');
+
+  const cryptoAddresses = {
+    btc: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+    eth: '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9',
+    usdt: '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9',
+    usdc: '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9',
+  };
+
+  const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(order.id);
+
+  res.render('checkout/payment', { title: 'Complete Payment', order, items, cryptoAddresses });
+});
+
+router.post('/payment/:orderNumber/confirm', requireAuth, (req, res) => {
+  const order = db.prepare('SELECT * FROM orders WHERE order_number = ? AND user_id = ?').get(req.params.orderNumber, req.session.user.id);
+  if (!order) return res.redirect('/');
+
+  const { txid, gift_code } = req.body;
+
+  let notes = '';
+  if (order.payment_method.startsWith('crypto')) {
+    notes = 'Transaction ID: ' + (txid || 'N/A');
+  } else if (order.payment_method.startsWith('gift')) {
+    notes = 'Gift Card Code: ' + (gift_code || 'N/A');
+  }
+
+  db.prepare("UPDATE orders SET payment_status = 'paid', notes = ? WHERE id = ?").run(notes, order.id);
+
+  res.redirect(`/checkout/confirmation/${order.order_number}`);
 });
 
 router.get('/confirmation/:orderNumber', requireAuth, (req, res) => {

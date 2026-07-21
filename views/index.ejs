@@ -14,9 +14,12 @@
       <p>Find exactly what you need to stay comfortable</p>
     </div>
     <div class="category-grid">
+      <% const catImages = { 'air-conditioners': 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=300&h=300&fit=crop', 'tower-fans': 'https://images.unsplash.com/photo-1624898135772-0e4991a9d80c?w=300&h=300&fit=crop', 'pedestal-fans': 'https://images.unsplash.com/photo-1626806819282-2c1dc01a5e0c?w=300&h=300&fit=crop', 'desk-fans': 'https://images.unsplash.com/photo-1617201833818-6a0b4c4b6f5c?w=300&h=300&fit=crop', 'evaporative-coolers': 'https://images.unsplash.com/photo-1602523366596-7c5df2fe7323?w=300&h=300&fit=crop', 'ceiling-fans': 'https://images.unsplash.com/photo-1585128792020-5e9f3e0b1b8a?w=300&h=300&fit=crop', 'smart-cooling': 'https://images.unsplash.com/photo-1558002038-1055907df827?w=300&h=300&fit=crop', 'accessories': 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=300&h=300&fit=crop' }; %>
       <% categories.forEach(c => { %>
         <a href="/products?category=<%= c.slug %>" class="category-card">
-          <div class="icon"><%= c.slug === 'air-conditioners' ? '&#10052;' : c.slug === 'tower-fans' ? '&#9768;' : c.slug === 'pedestal-fans' ? '&#9786;' : c.slug === 'desk-fans' ? '&#9729;' : c.slug === 'evaporative-coolers' ? '&#9827;' : c.slug === 'ceiling-fans' ? '&#9788;' : c.slug === 'smart-cooling' ? '&#9881;' : c.slug === 'accessories' ? '&#9881;' : '&#9733;' %></div>
+          <div class="icon" style="background: var(--bg-light); border-radius: 8px; height: 120px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin-bottom: 8px;">
+            <img src="<%= catImages[c.slug] || 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=300&h=300&fit=crop' %>" alt="<%= c.name %>" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
           <h3><%= c.name %></h3>
           <p><%= c.description ? c.description.substring(0, 55) : 'Cooling solutions' %></p>
         </a>
@@ -40,13 +43,13 @@
           </a>
           <div class="category"><%= p.category_name || 'Cooling' %></div>
           <h3><a href="/products/<%= p.slug %>"><%= p.name %></a></h3>
-          <div class="rating">&#9733;&#9733;&#9733;&#9733;&#9734;</div>
+          <div class="rating"><span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span><span class="icon-star"></span><span class="icon-star-empty"></span></div>
           <div class="price">
             <span class="symbol">&euro;</span><%= Math.floor(p.price) %><span class="cents">.<%= (p.price % 1).toFixed(2).slice(2) %></span>
             <% if (p.compare_price && p.compare_price > p.price) { %><span class="compare-price">&euro;<%= p.compare_price.toFixed(2) %></span><span class="badge-save">Save &euro;<%= (p.compare_price - p.price).toFixed(2) %></span><% } %>
           </div>
           <% if (p.energy_rating) { %><span class="energy-badge"><%= p.energy_rating %></span><% } %>
-          <div class="free-ship">FREE delivery</div>
+          <div class="free-ship"><span class="icon-truck"></span> FREE delivery</div>
           <form action="/cart/add" method="POST" class="add-to-cart">
             <input type="hidden" name="product_id" value="<%= p.id %>">
             <input type="hidden" name="quantity" value="1">
@@ -78,7 +81,7 @@
           <div class="price">
             <span class="symbol">&euro;</span><%= Math.floor(p.price) %><span class="cents">.<%= (p.price % 1).toFixed(2).slice(2) %></span>
           </div>
-          <div class="free-ship">FREE delivery</div>
+          <div class="free-ship"><span class="icon-truck"></span> FREE delivery</div>
           <form action="/cart/add" method="POST" class="add-to-cart">
             <input type="hidden" name="product_id" value="<%= p.id %>">
             <input type="hidden" name="quantity" value="1">

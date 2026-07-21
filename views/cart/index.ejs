@@ -64,7 +64,7 @@
           <div class="fill" style="width: <%= Math.min(100, (subtotal / freeThreshold) * 100) %>%"></div>
         </div>
       <% } else { %>
-        <div class="free-shipping-bar">You qualify for free delivery across Europe!</div>
+        <div class="free-shipping-bar"><span class="icon-truck"></span> You qualify for free delivery across Europe!</div>
       <% } %>
       <div class="row"><span>Subtotal</span><span>&euro;<%= subtotal.toFixed(2) %></span></div>
       <div class="row"><span>Delivery</span><span><%= shippingFree ? 'FREE' : '&euro;' + shippingCost.toFixed(2) %></span></div>
