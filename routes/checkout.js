@@ -93,10 +93,10 @@ router.get('/payment/:orderNumber', requireAuth, (req, res) => {
   if (!order) return res.redirect('/');
 
   const cryptoAddresses = {
-    btc: 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
-    eth: '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9',
-    usdt: '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9',
-    usdc: '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9',
+    btc: getSetting('crypto_btc') || 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh',
+    eth: getSetting('crypto_eth') || '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9',
+    usdt: getSetting('crypto_usdt') || '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9',
+    usdc: getSetting('crypto_usdc') || '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9',
   };
 
   const items = db.prepare('SELECT * FROM order_items WHERE order_id = ?').all(order.id);

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const { db, getSetting, updateSetting } = require('../database');
+const { db, getSetting, getAllSettings, updateSetting } = require('../database');
 const { requireAdmin } = require('../middleware/auth');
 
 router.use(requireAdmin);
@@ -334,7 +334,7 @@ router.post('/payments/update/:id', (req, res) => {
 
 router.get('/settings', (req, res) => {
   try {
-    const settings = db.getAllSettings();
+    const settings = getAllSettings();
     res.render('admin/settings', { title: 'Settings', settings });
   } catch (e) {
     console.error('Settings load error:', e);

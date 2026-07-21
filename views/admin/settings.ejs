@@ -48,10 +48,23 @@
     <label>Footer Text</label>
     <input type="text" name="footer_text" value="<%= settings.footer_text || '' %>">
   </div>
-  <h3 style="margin: 1.5rem 0 1rem;">Payments</h3>
+  <h3 style="margin: 1.5rem 0 1rem;">Crypto Wallet Addresses</h3>
+  <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 10px;">These addresses are shown to customers when they choose to pay with cryptocurrency.</p>
   <div class="form-group">
-    <label>Stripe Key (legacy)</label>
-    <input type="password" name="stripe_key" value="<%= settings.stripe_key || '' %>">
+    <label>Bitcoin (BTC) Address</label>
+    <input type="text" name="crypto_btc" value="<%= settings.crypto_btc || 'bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh' %>" placeholder="bc1...">
+  </div>
+  <div class="form-group">
+    <label>Ethereum (ETH) Address</label>
+    <input type="text" name="crypto_eth" value="<%= settings.crypto_eth || '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9' %>" placeholder="0x...">
+  </div>
+  <div class="form-group">
+    <label>Tether (USDT) Address</label>
+    <input type="text" name="crypto_usdt" value="<%= settings.crypto_usdt || '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9' %>" placeholder="0x...">
+  </div>
+  <div class="form-group">
+    <label>USD Coin (USDC) Address</label>
+    <input type="text" name="crypto_usdc" value="<%= settings.crypto_usdc || '0x742d35Cc6634C0532925a3b844Bc876e5505B3b9' %>" placeholder="0x...">
   </div>
   <button type="submit" class="btn btn-primary btn-lg">Save Settings</button>
 </form>
